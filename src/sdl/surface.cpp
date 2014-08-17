@@ -16,11 +16,19 @@ Surface::Surface(int width, int height)
 : width(width)
 , height(height)
 {
-	//RGBA format
-	constexpr uint32_t rmask = 0xff000000;
-	constexpr uint32_t gmask = 0x00ff0000;
-	constexpr uint32_t bmask = 0x0000ff00;
-	constexpr uint32_t amask = 0x000000ff;
+	uint32_t rmask, gmask, bmask, amask;
+
+	#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		rmask = 0xff000000;
+		gmask = 0x00ff0000;
+		bmask = 0x0000ff00;
+		amask = 0x000000ff;
+	#else
+		rmask = 0x000000ff;
+		gmask = 0x0000ff00;
+		bmask = 0x00ff0000;
+		amask = 0xff000000;
+	#endif
 
 	surface = SDL_CreateRGBSurface(0, width, height, 32, rmask, gmask, bmask, amask);
 
@@ -105,6 +113,14 @@ void Surface::Blit(const Surface &surf, SDL_Rect *src, SDL_Rect *dest)
 	{
 		throw sdl::Exception("SDL_BlitSurface()");
 	}
+}
+
+
+void Surface::SetBlend(bool blend)
+{
+	const auto mode = blend ? SDL_BLENDMODE_BLEND : SDL_BLENDMODE_NONE;
+
+	SDL_SetSurfaceBlendMode(surface, mode);
 }
 
 

@@ -43,14 +43,14 @@ void Renderer::Clear() const
 }
 
 
-void Renderer::Copy(const Texture &texture, const SDL_Rect *src, const SDL_Rect *dest)
+void Renderer::Copy(const Texture &texture, const SDL_Rect *src, const SDL_Rect *dest) const
 {
 	SDL_RenderCopy(renderer, texture.GetTexture(), src, dest);
 }
 
 
 void Renderer::CopyEx(const Texture &texture, const SDL_Rect *src, const SDL_Rect *dest
-	, double angle, const SDL_Point* center)
+	, double angle, const SDL_Point* center) const
 {
 	SDL_RenderCopyEx(renderer, texture.GetTexture(), src, dest, angle, center, SDL_FLIP_NONE);
 }
@@ -61,6 +61,17 @@ void Renderer::Present() const
 	SDL_RenderPresent(renderer);
 }
 
+
+unsigned Renderer::GetWidth() const
+{
+	return window.GetWidth();
+}
+
+
+unsigned Renderer::GetHeight() const
+{
+	return window.GetHeight();
+}
 
 
 } // namespace sdl

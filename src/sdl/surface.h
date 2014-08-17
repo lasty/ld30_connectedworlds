@@ -41,6 +41,7 @@ public:
 
 	void Blit(const Surface &surf, SDL_Rect *src, SDL_Rect *dest);
 
+	void SetBlend(bool blend);
 };
 
 

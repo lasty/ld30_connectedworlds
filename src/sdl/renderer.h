@@ -37,12 +37,14 @@ public:
 	void SetColour(uint8_t r, uint8_t g, uint8_t b, uint8_t a) const;
 	void Clear() const;
 
-	void Copy(const Texture &texture, const SDL_Rect *src, const SDL_Rect *dest);
+	void Copy(const Texture &texture, const SDL_Rect *src, const SDL_Rect *dest) const;
 	void CopyEx(const Texture &texture, const SDL_Rect *src, const SDL_Rect *dest
-		, double angle, const SDL_Point* center);
+		, double angle, const SDL_Point* center) const;
 
 	void Present() const;
 
+	unsigned GetWidth() const;
+	unsigned GetHeight() const;
 };
 
 
