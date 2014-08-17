@@ -14,6 +14,13 @@ public:
 	Window(const std::string &title, unsigned width, unsigned height);
 	~Window();
 
+	//Block copy and move
+	Window(const Window &copy) = delete;
+	Window(Window &&move) = delete;
+	Window& operator=(const Window &copy) = delete;
+	Window& operator=(Window &&move) = delete;
+
+
 private:
 	SDL_Window *window = nullptr;
 	std::string title;
