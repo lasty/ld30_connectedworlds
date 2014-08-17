@@ -27,9 +27,12 @@ find_package(GLM 0.9.5.4 REQUIRED)
 
 # Sources
 
+file(GLOB SDL_SOURCES src/sdl/*.cpp)
+list(APPEND ALL_SOURCES ${SDL_SOURCES})
+
+
 file(GLOB WARMUP_SOURCES src/*.cpp)
 list(APPEND ALL_SOURCES ${WARMUP_SOURCES})
-
 
 # Main target
 

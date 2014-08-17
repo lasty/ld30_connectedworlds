@@ -1,7 +1,12 @@
 
 #include <iostream>
 
+#include "sdl/init.h"
+#include "sdl/window.h"
+
 int main()
 {
-	std::cout << "Hello world" << std::endl;
+	sdl::Init init;
+	sdl::Window window("warmup30", 400, 300);
+
 }
