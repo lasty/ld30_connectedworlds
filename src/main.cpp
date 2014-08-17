@@ -1,12 +1,30 @@
 
 #include <iostream>
 
-#include "sdl/init.h"
-#include "sdl/window.h"
+#include "sdl/app.h"
+
+
+#include <sstream>
+
+class TestApp : public sdl::App
+{
+public:
+	using App::App;
+
+	void OnFPS(int fps) override
+	{
+		std::ostringstream ss;
+		ss << "FPS: " << fps;
+
+		SetTitle(ss.str());
+	}
+};
 
 int main()
 {
-	sdl::Init init;
-	sdl::Window window("warmup30", 400, 300);
+
+	TestApp app("warmup30", 400, 300);
+
+	app.Run();
 
 }
