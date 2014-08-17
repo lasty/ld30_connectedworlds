@@ -29,6 +29,8 @@ private:
 	unsigned height = 0;
 
 public:
+	SDL_Surface * GetSurface() const { return surface; }
+
 	unsigned GetWidth() const { return width; }
 	unsigned GetHeight() const { return height; }
 

@@ -18,7 +18,19 @@ public:
 
 		SetTitle(ss.str());
 	}
+
+	void Render() const override
+	{
+		renderer.SetColour(20, 30, 40, 255);
+		renderer.Clear();
+	}
+
+	void OnKey(SDL_KeyboardEvent &e, bool down) override
+	{
+		Quit();
+	}
 };
+
 
 int main()
 {

@@ -28,6 +28,7 @@ private:
 	unsigned height;
 
 public:
+	SDL_Window * GetWindow() const { return window; }
 	unsigned GetWidth() const { return width; }
 	unsigned GetHeight() const { return height; }
 

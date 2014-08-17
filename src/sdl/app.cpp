@@ -61,7 +61,7 @@ void App::ProcessEvents()
 
 void App::Present()
 {
-	//TODO
+	renderer.Present();
 }
 
 

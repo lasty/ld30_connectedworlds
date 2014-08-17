@@ -4,6 +4,7 @@
 
 #include "sdl/init.h"
 #include "sdl/window.h"
+#include "sdl/renderer.h"
 
 #include <string>
 #include <memory>
@@ -25,6 +26,8 @@ private:
 	sdl::Window window;
 
 protected:
+	sdl::Renderer renderer { window };
+
 	bool running = false;
 	long long lastframe_time = 0;
 	int fps_framecount = 0;
