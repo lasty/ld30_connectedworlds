@@ -1,6 +1,9 @@
 #ifndef SDL_TEXTURE_H
 #define SDL_TEXTURE_H
 
+
+#include <string>
+
 struct SDL_Texture;
 
 namespace sdl
@@ -17,6 +20,7 @@ public:
 	Texture();
 	Texture(const Renderer &rend, int width, int height);
 	Texture(const Renderer &rend, const Surface &surface);
+	Texture(const Renderer &rend, const std::string &image_filename);
 	~Texture();
 
 

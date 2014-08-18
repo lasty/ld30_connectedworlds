@@ -4,26 +4,27 @@ cmake_minimum_required(VERSION 3.0)
 # FindSDL2
 # -------
 #
-# Locate SDL library
+# Locate SDL2 library
 #
-# Adapted from original FindSDL2
-#
-# This defines an interface library "sdl2"
-# which you can link to using
-# target_link_library(program sdl2)
-#
-#
-#
-# ::
-#
-#   SDL2_LIBRARY, the name of the library to link against
-#   SDL2_FOUND, if false, do not try to link to SDL
-#   SDL2_INCLUDE_DIR, where to find SDL.h
-#   SDL2_VERSION_STRING, human-readable string containing the version of SDL
-#
-#
+# Adapted from original FindSDL cmake script
 
-# include path
+# This defines an interface library "SDL2"
+# which you can link to using
+# target_link_library(program SDL2)
+
+# Optional components known:  image, mixer 
+# Will define compiler definitions USE_SDL2_IMAGE and USE_SDL2_MIXER
+# if used
+# eg.  find_package(SDL2 2.0.0 REQUIRED COMPONENTS image)
+
+# Install dll functions for windows:
+# 
+# SDL2_INSTALL(DEST)
+# SDL2_IMAGE_INSTALL(DEST)
+# SDL2_MIXER_INSTALL(DEST)
+
+
+# Find include path
 
 find_path(SDL2_INCLUDE_DIR SDL.h PATH_SUFFIXES SDL2)
 
@@ -40,7 +41,6 @@ find_library(SDL2_LIBRARY
   NAMES SDL2
   PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX}
 )
-
 
 
 # Get version info
@@ -95,15 +95,19 @@ foreach(COMPONENT ${SDL2_FIND_COMPONENTS})
 		#message("SDL2_IMAGE_LIBRARY ${SDL2_IMAGE_LIBRARY}")
 
 		target_link_libraries(SDL2 INTERFACE ${SDL2_IMAGE_LIBRARY})
+		target_include_directories(SDL2 INTERFACE ${SDL2_IMAGE_INCLUDE_DIR})
+		target_compile_definitions(SDL2 INTERFACE USE_SDL2_IMAGE)
 	endif()
 
 	# SDL_Mixer library
 	if(${COMPONENT} STREQUAL "mixer")
 		find_path(SDL2_MIXER_INCLUDE_DIR SDL_mixer.h PATH_SUFFIXES SDL2)
 		find_library(SDL2_MIXER_LIBRARY NAMES SDL2_Mixer PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX})
-		#message("SDL2_IMAGE_LIBRARY ${SDL2_IMAGE_LIBRARY}")
+		#message("SDL2_MIXER_LIBRARY ${SDL2_MIXER_LIBRARY}")
 
 		target_link_libraries(SDL2 INTERFACE ${SDL2_MIXER_LIBRARY})
+		target_include_directories(SDL2 INTERFACE ${SDL2_MIXER_INCLUDE_DIR})
+		target_compile_definitions(SDL2 INTERFACE USE_SDL2_MIXER)
 	endif()
 
 endforeach()
@@ -113,9 +117,9 @@ endforeach()
 #Installs dll for windows in given DEST directory, under COMPONENT dll
 function(SDL2_INSTALL DEST)
 	if(WIN32)
-		find_file(SDL_DLL NAMES SDL2.dll PATH_SUFFIXES bin)
-		message(STATUS "found: ${SDL_DLL}")
-		install(FILES ${SDL_DLL} DESTINATION ${DEST} COMPONENT dll)
+		find_file(SDL2_DLL NAMES SDL2.dll PATH_SUFFIXES bin)
+		message(STATUS "found: ${SDL2_DLL}")
+		install(FILES ${SDL2_DLL} DESTINATION ${DEST} COMPONENT dll)
 	endif(WIN32)
 endfunction()
 
@@ -124,11 +128,14 @@ endfunction()
 function(SDL2_IMAGE_INSTALL DEST)
 	if(WIN32)
 
-		#add any variants of dlls to this list (it will not break if they are not found)
-		list(APPEND dllnames SDL2_image.dll libpng16-16.dll zlib1.dll)
+		# add any variants of dlls to these lists (it will not break if they are not found)
+		list(APPEND dllnames SDL2_image.dll)
 
-		#Uncomment this if you need jpeg, tiff or webp support
-		#list(APPEND dllnames libwebp-4.dll libtiff-5.dll libjpeg-9.dll)
+		# Uncomment these if you need png, jpeg, tiff or webp support
+		list(APPEND dllnames libpng16-16.dll zlib1.dll)
+		#list(APPEND dllnames libjpeg-9.dll)
+		#list(APPEND dllnames libtiff-5.dll)
+		#list(APPEND dllnames libwebp-4.dll)
 
 		foreach(dll ${dllnames})
 			find_file(DLL_FILE NAMES ${dll} PATH_SUFFIXES bin)
@@ -142,3 +149,32 @@ function(SDL2_IMAGE_INSTALL DEST)
 
 	endif(WIN32)
 endfunction()
+
+
+
+#Installs SDL2_mixer.dll and the PNG dlls.
+function(SDL2_MIXER_INSTALL DEST)
+	if(WIN32)
+
+		# add any variants of dlls to these lists (it will not break if they are not found)
+		list(APPEND dllnames SDL2_mixer.dll)
+
+		# Uncomment these if you need flac, vorbis/ogg, mod, or mp3 support
+		#list(APPEND dllnames libFLAC-8.dll)
+		#list(APPEND dllnames libogg-0.dll libvorbis-0.dll libvorbisfile-3.dll)
+		#list(APPEND dllnames libmikmod-2.dll libmodplug-1.dll)
+		#list(APPEND dllnames smpeg2.dll)
+
+		foreach(dll ${dllnames})
+			find_file(DLL_FILE NAMES ${dll} PATH_SUFFIXES bin)
+
+			if(DLL_FILE)
+				message(STATUS "found: ${DLL_FILE}")
+				install(FILES ${DLL_FILE} DESTINATION ${DEST} COMPONENT dll)
+			endif()
+			unset(DLL_FILE CACHE) #so much for contained scope inside a function
+		endforeach()
+
+	endif(WIN32)
+endfunction()
+

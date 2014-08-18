@@ -19,8 +19,7 @@ public:
 	Font font1 { DATA_PATH "DroidSans.ttf", 16 };
 	Text text1 { renderer, font1, "Hello World" };
 
-	sdl::Surface sprite_surf { DATA_PATH "sprites.png" };
-	sdl::Texture sprite_texture { renderer, sprite_surf };
+	sdl::Texture sprite_texture { renderer, DATA_PATH "sprites.png" };
 
 
 	TestApp(int width, int height)

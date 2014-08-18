@@ -6,6 +6,7 @@
 #include "sdl/renderer.h"
 #include "sdl/surface.h"
 
+#include <string>
 
 namespace sdl
 {
@@ -33,10 +34,24 @@ Texture::Texture(const Renderer &rend, int width, int height)
 }
 
 
-
 Texture::Texture(const Renderer &rend, const Surface &surface)
 {
 	texture = SDL_CreateTextureFromSurface(rend.GetRenderer(), surface.GetSurface());
+
+	if (texture == nullptr)
+	{
+		throw sdl::Exception("SDL_CreateTextureFromSurface()");
+	}
+
+	QueryTextureSize();
+}
+
+
+Texture::Texture(const Renderer &rend, const std::string &image_filename)
+{
+	sdl::Surface surf { image_filename };
+
+	texture = SDL_CreateTextureFromSurface(rend.GetRenderer(), surf.GetSurface());
 
 	if (texture == nullptr)
 	{
