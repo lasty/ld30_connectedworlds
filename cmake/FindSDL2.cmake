@@ -42,6 +42,8 @@ find_library(SDL2_LIBRARY
   PATH_SUFFIXES lib ${VC_LIB_PATH_SUFFIX}
 )
 
+set(SDL_REQUIRED SDL2_LIBRARY SDL2_INCLUDE_DIR)
+
 
 # Get version info
 
@@ -61,9 +63,6 @@ if(SDL2_INCLUDE_DIR AND EXISTS "${SDL2_INCLUDE_DIR}/SDL_version.h")
   unset(SDL2_VERSION_PATCH)
 endif()
 
-
-find_package(PackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2 REQUIRED_VARS SDL2_LIBRARY SDL2_INCLUDE_DIR VERSION_VAR SDL2_VERSION_STRING)
 
 
 #Create interface library for convenience
@@ -97,6 +96,7 @@ foreach(COMPONENT ${SDL2_FIND_COMPONENTS})
 		target_link_libraries(SDL2 INTERFACE ${SDL2_IMAGE_LIBRARY})
 		target_include_directories(SDL2 INTERFACE ${SDL2_IMAGE_INCLUDE_DIR})
 		target_compile_definitions(SDL2 INTERFACE USE_SDL2_IMAGE)
+		list(APPEND SDL_REQUIRED SDL2_IMAGE_LIBRARY)
 	endif()
 
 	# SDL_Mixer library
@@ -108,9 +108,14 @@ foreach(COMPONENT ${SDL2_FIND_COMPONENTS})
 		target_link_libraries(SDL2 INTERFACE ${SDL2_MIXER_LIBRARY})
 		target_include_directories(SDL2 INTERFACE ${SDL2_MIXER_INCLUDE_DIR})
 		target_compile_definitions(SDL2 INTERFACE USE_SDL2_MIXER)
+		list(APPEND SDL_REQUIRED SDL2_MIXER_LIBRARY)
 	endif()
 
 endforeach()
+
+
+find_package(PackageHandleStandardArgs)
+FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL2 REQUIRED_VARS ${SDL_REQUIRED} VERSION_VAR SDL2_VERSION_STRING)
 
 
 
