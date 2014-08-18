@@ -5,6 +5,8 @@
 
 #include "sdl/exception.h"
 
+#include <SDL_image.h> //TODO this will probably be wrong for MacOSX?
+
 #include <stdint.h>
 
 
@@ -37,6 +39,20 @@ Surface::Surface(int width, int height)
 		throw sdl::Exception("SDL_CreateRGBSurface()");
 	}
 }
+
+
+Surface::Surface(const std::string &image_filename)
+{
+	surface = IMG_Load(image_filename.c_str());
+	if (surface == nullptr)
+	{
+		throw sdl::Exception("IMG_Load()");
+	}
+
+	width = surface->w;
+	height = surface->h;
+}
+
 
 
 Surface::~Surface()

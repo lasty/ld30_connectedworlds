@@ -19,7 +19,7 @@ project(warmup30)
 
 # Find prerequisites (see /cmake directory for scripts)
 find_package(cpp11 REQUIRED)
-find_package(SDL2 2.0.0 REQUIRED)
+find_package(SDL2 2.0.0 REQUIRED COMPONENTS image)
 find_package(OpenGL CONFIG)
 find_package(Freetype CONFIG)
 find_package(GLM 0.9.5.4 REQUIRED)
@@ -56,6 +56,7 @@ target_link_libraries(warmup30 PUBLIC SDL2 OpenGL Freetype GLM)
 if (WIN32)
 	CPP11_INSTALL(.)  #for C/C++ runtime and library
 	SDL2_INSTALL(.)
+	SDL2_IMAGE_INSTALL(.)
 	FREETYPE_INSTALL(.)
 endif(WIN32)
 

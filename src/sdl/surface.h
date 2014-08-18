@@ -2,6 +2,7 @@
 #define SDL_SURFACE_H
 
 #include <stdint.h>
+#include <string>
 
 struct SDL_Surface;
 struct SDL_Rect;
@@ -13,8 +14,8 @@ namespace sdl
 class Surface
 {
 public:
-	//Surface();
 	Surface(int width, int height);
+	Surface(const std::string &image_filename);
 	~Surface();
 
 	//Block copy, implement move

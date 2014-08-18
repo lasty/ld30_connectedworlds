@@ -5,6 +5,8 @@
 
 #include "font/font.h"
 #include "font/text.h"
+#include "sdl/surface.h"
+#include "sdl/texture.h"
 
 #include <sstream>
 
@@ -16,6 +18,10 @@ public:
 
 	Font font1 { DATA_PATH "DroidSans.ttf", 16 };
 	Text text1 { renderer, font1, "Hello World" };
+
+	sdl::Surface sprite_surf { DATA_PATH "sprites.png" };
+	sdl::Texture sprite_texture { renderer, sprite_surf };
+
 
 	TestApp(int width, int height)
 	: App("Warmup 30", width, height)
@@ -39,6 +45,8 @@ public:
 	{
 		renderer.SetColour(20, 30, 40, 255);
 		renderer.Clear();
+
+		renderer.Copy(sprite_texture, nullptr, nullptr);
 
 		text1.Render(renderer, 5, 5);
 
