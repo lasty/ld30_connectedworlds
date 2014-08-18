@@ -5,21 +5,16 @@
 // Include the SDL headers
 
 
-#ifdef __APPLE__
-	// MacOSX requires Framework prefix
-	#include <SDL2/SDL.h>
-#else
-	#include <SDL.h>
-#endif
+#include <SDL.h>
 
 
 #ifdef USE_SDL2_IMAGE
-	#include <SDL_image.h>  //TODO: MacOSX might be different
+	#include <SDL_image.h>
 #endif
 
 
 #ifdef USE_SDL2_MIXER
-	#include <SDL_mixer.h>  //TODO: MacOSX might be different
+	#include <SDL_mixer.h>
 #endif
 
 
