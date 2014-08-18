@@ -7,6 +7,8 @@
 #include "font/text.h"
 #include "sdl/surface.h"
 #include "sdl/texture.h"
+#include "sdl/sound.h"
+#include "sdl/mixer.h"
 
 #include <sstream>
 
@@ -21,6 +23,8 @@ public:
 
 	sdl::Texture sprite_texture { renderer, DATA_PATH "sprites.png" };
 
+	sdl::Mixer mixer;
+	sdl::Sound sound1 { DATA_PATH "powerup.wav" };
 
 	TestApp(int width, int height)
 	: App("Warmup 30", width, height)
@@ -53,7 +57,8 @@ public:
 
 	void OnKey(SDL_KeyboardEvent &e, bool down) override
 	{
-		Quit();
+		mixer.PlaySound(sound1);
+		//Quit();
 	}
 };
 

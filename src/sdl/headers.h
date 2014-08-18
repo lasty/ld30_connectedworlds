@@ -13,6 +13,16 @@
 #endif
 
 
+#ifdef USE_SDL2_IMAGE
+	#include <SDL_image.h>  //TODO: MacOSX might be different
+#endif
+
+
+#ifdef USE_SDL2_MIXER
+	#include <SDL_mixer.h>  //TODO: MacOSX might be different
+#endif
+
+
 // SDL redefines main on windows
 #ifdef __WIN32__
 #undef main

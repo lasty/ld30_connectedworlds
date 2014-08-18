@@ -5,8 +5,6 @@
 
 #include "sdl/exception.h"
 
-#include <SDL_image.h> //TODO this will probably be wrong for MacOSX?
-
 #include <stdint.h>
 
 
