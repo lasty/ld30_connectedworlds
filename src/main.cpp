@@ -72,6 +72,7 @@ int main()
 
 int main()
 {
+	seed_random();
 
 	AddPath(".");
 	AddPath("data");
