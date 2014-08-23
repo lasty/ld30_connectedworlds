@@ -11,6 +11,7 @@
 class Particle
 {
 public:
+	Particle(Sprite * sprite, float x, float y, float angle);
 	Particle(Sprite & sprite, float x, float y, float angle);
 
 public:

@@ -1,3 +1,8 @@
+#ifndef GAME_H
+#define GAME_H
+
+
+
 
 #include "sdl/app.h"
 #include "sdl/mixer.h"
@@ -11,6 +16,8 @@
 #include "utils.h"
 
 #include "world.h"
+
+#include "gamedefs.h"
 
 #include <glm/trigonometric.hpp>
 #include <glm/geometric.hpp>
@@ -26,11 +33,11 @@ const int mapwidth = windowwidth/64 + 1;
 const int mapheight = windowheight/64 + 1;
 
 
-float random_map_width() { return (random_float(0.0f, mapwidth-3) + 1) * 64.0f; }
-float random_map_height() { return (random_float(0.0f, mapheight-3) + 1) * 64.0f; }
+//float random_map_width() { return (random_float(0.0f, mapwidth-3) + 1) * 64.0f; }
+//float random_map_height() { return (random_float(0.0f, mapheight-3) + 1) * 64.0f; }
 
 // Some more specific game entities
-
+/*
 class Coin : public Particle
 {
 public:
@@ -42,14 +49,15 @@ public:
 	}
 };
 
+*/
 
 // Class to control the player with
 
 class Player : public Particle
 {
 public:
-	Player(Sprite &sprite)
-	: Particle(sprite, random_map_width(), random_map_height(), random_rotation())
+	Player()
+	: Particle(nullptr, random_float(0.0f, 20.0f), random_float(0.0f, 20.0f), random_rotation())
 	{
 		radius = 16.0f;
 		friction = 0.9f;
@@ -82,6 +90,10 @@ public:
 
 };
 
+#include "hud.h"
+#include "world_renderer.h"
+#include "entity_renderer.h"
+#include "sound_manager.h"
 
 
 // Main game app class.
@@ -90,27 +102,12 @@ class GameApp : public sdl::App
 {
 
 public:
+	HUD hud { renderer, this };
 
-	Font font1 { FindFile("DroidSans.ttf"), 16 };
-	Font font2 { FindFile("DroidSans.ttf"), 11 };
+	WorldRenderer world_renderer { renderer };
+	EntityRenderer entity_renderer { renderer };
 
-	Text text_worldname { renderer, font1, "..." };
-	Text text_count { renderer, font2, "" };
-	Text text_particle_count { renderer, font2, "" };
-	Text text_fps { renderer, font2, "" };
-
-	sdl::Texture sprite_texture { renderer, FindFile("sprites.png") };
-
-	Tile brick { renderer, sprite_texture, { 0, 0, 64, 64} };
-	Tile ground { renderer, sprite_texture, { 64, 0, 64, 64} };
-	Tile none_tile { renderer, sprite_texture, { 0, 0, 0, 0} };
-
-	Sprite arrow { renderer, sprite_texture, { 0, 64, 64, 64}, { 32, 32} };
-	Sprite circle { renderer, sprite_texture, { 64, 64, 64, 64}, { 32, 32} };
-	Sprite none_sprite { renderer, sprite_texture, { 0, 0, 0, 0}, { 0, 0} };
-
-	sdl::Sound sound1 { FindFile("powerup.wav") };
-	sdl::Sound sound2 { FindFile("beep.wav") };
+	SoundManager sounds { mixer };
 
 	World overworld { 1 };
 	World underworld { 0 };
@@ -119,28 +116,16 @@ public:
 	World & GetWorld() {  return whichworld==0? underworld : overworld; }
 	const World & GetWorld() const {  return whichworld==0? underworld : overworld; }
 
-	void SwitchWorlds() {
+	void SwitchWorlds()
+	{
 		whichworld = whichworld==0? 1: 0;
-		text_worldname.SetText(renderer, font1, GetWorld().GetName());
+		hud.SetWorldName();
 	 }
-
-
-/*
-	//2d tilemap in a 1d vector.  Just using bool for ground/wall
-	std::vector<bool> map;
-	void SetMap(int x, int y, bool value) { map.at((mapwidth * y) + x) = value; }
-	bool GetMap(int x, int y) const { return map.at((mapwidth*y)+x); }
-*/
-
-	//Not used anymore.. maybe I will add smoke or something
-	std::vector<Particle> particles;
-
-	//List of coins on the field
-	//std::vector<Coin> coins;
 
 	int coins_score = 0; //Player's Score
 
-	Player player{ arrow };
+	Player player;
+
 
 	GameApp()
 	: App("LD 30 - Connected Worlds", windowwidth, windowheight)
@@ -168,40 +153,15 @@ public:
 			}
 		}
 */
+		hud.SetWorldName();
 	}
-
-	const Tile & GetTileRender(const MapTile &mt) const
-	{
-		switch (mt.tiledef)
-		{
-			case tile::ground:
-				return ground;
-			case tile::brick:
-				return brick;
-			default:
-				return none_tile;
-		}
-	}
-
 
 	//draw the map on screen
 	void RenderMap() const
 	{
 		const World & world = GetWorld();
 
-		for (int x=0; x<mapwidth; x++)
-		{
-			for (int y=0; y<mapheight; y++)
-			{
-				const MapTile & mt = world.GetXY(x,y);
-
-				glm::vec2 worldpos = world.GetWorldPos(x, y);
-
-				const Tile &tile = GetTileRender(mt);
-
-				tile.Render(worldpos.x, worldpos.y);
-			}
-		}
+		world_renderer.RenderMap(world);
 	}
 
 
@@ -209,42 +169,10 @@ public:
 	{
 		const World & world = GetWorld();
 
-
-		for(Entity const &e : world.entities)
-		{
-			//TODO culling
-
-			glm::vec2 worldpos = e.GetWorldPos();
-
-			const Sprite& sprite = GetSpriteForEntity(e);
-
-			sprite.Render(worldpos.x, worldpos.y, e.heading);
-		}
-
+		entity_renderer.RenderEntities(world);
 	}
 
 
-	const Sprite & GetSpriteForEntity(const Entity &e) const
-	{
-		switch (e.entitydef)
-		{
-			case ent::player:
-				return arrow;
-			case ent::coin:
-				return circle;
-			case ent::none:
-				return none_sprite;
-			default:
-				return none_sprite;
-		}
-	}
-
-
-	//Not used anymore
-	void NewParticle()
-	{
-		//particles.push_back(std::move(p));
-	}
 
 	//Create numcoins coins at random position on the map
 	void NewCoin(int numcoins = 1)
@@ -257,7 +185,7 @@ public:
 	{
 		RenderEntities();
 
-		player.Render();
+		entity_renderer.RenderPlayer(player);
 	}
 
 
@@ -278,83 +206,23 @@ public:
 
 	}
 
+
 	//Update all particles, coins, player
 	void UpdateObjects(float dt)
 	{
 		UpdatePlayer(dt);
 
-		for(auto &p : particles)
-		{
-			p.Update(dt);
-		}
-
-		//cannot add/change the vector while we are going through it, add more after
-		int new_coins = 0;
-
-/*
-		for(auto &c : coins)
-		{
-			c.Update(dt);
-			if (player.HasCollision(c))
-			{
-				c.Kill();
-				mixer.PlaySound(sound2);
-				coins_score++;
-				new_coins++;
-			}
-		}
-*/
-
-		// lambda function to test whether we should remove this particle
-		const auto not_alive = [](Particle &p) { return not p.alive; };
-
-		// Remove any dead particles/coins...
-		//
-		// If you haven't seen this pattern before it can be confusing.
-		// "remove_if" partitions the vector with a predicate function.
-		// Anything returning true gets moved to the end.  It returns an
-		// iterator marking the partition point.  Next we call erase to
-		// actually remove the requested items (if any).
-		//
-
-		auto partition = std::remove_if(particles.begin(), particles.end(), not_alive);
-		particles.erase(partition, particles.end());
-
-		// Repeat for coins
-
-/*
-		auto partition2 = std::remove_if(coins.begin(), coins.end(), not_alive);
-		coins.erase(partition2, coins.end());
-*/
-
-		// Add any new coins here.  We can't do this inside the loops above.
-		NewCoin(new_coins);
+		overworld.UpdateObjects(dt);
+		underworld.UpdateObjects(dt);
 	}
 
 
 	//Gets called once per second with the number of frames
 	void OnFPS(int fps) override
 	{
-		std::ostringstream ss;
-		ss << "FPS: " << fps;
-
-		//SetTitle(ss.str());
-
-		text_fps.SetText(renderer, font2, ss.str());
+		hud.SetFPS(fps);
 	}
 
-
-	void UpdateHUD(float dt)
-	{
-		std::ostringstream cc;
-		cc << "Coins: " << coins_score;;
-		text_count.SetText(renderer, font1, cc.str());
-
-		std::ostringstream pc;
-		pc << "Arrows/WASD: Move.  Space: More coins.  ESC: Quit.  ";
-		//pc << "Particles: " << (particles.size() + coins.size() + 1);
-		text_particle_count.SetText(renderer, font2, pc.str());
-	}
 
 
 	// Gets called once per frame, to render the window.
@@ -370,18 +238,7 @@ public:
 
 		RenderObjects();
 
-		RenderHUD();
-	}
-
-
-	void RenderHUD() const
-	{
-		text_worldname.Render(renderer, 5, 5);
-
-		text_count.Render(renderer, 5, -1);
-		text_particle_count.Render(renderer, -10, -1);
-
-		text_fps.Render(renderer, -5, 5);
+		hud.RenderHUD();
 	}
 
 
@@ -390,7 +247,7 @@ public:
 	{
 		UpdateObjects(dt);
 
-		UpdateHUD(dt);
+		hud.UpdateHUD(dt);
 	}
 
 
@@ -405,7 +262,7 @@ public:
 			}
 			else if (e.keysym.sym == SDLK_SPACE)
 			{
-				mixer.PlaySound(sound1);
+				sounds.Powerup();
 				NewCoin(10);
 			}
 			else if (e.keysym.sym == SDLK_TAB)
@@ -422,3 +279,5 @@ public:
 	}
 };
 
+
+#endif // GAME_H

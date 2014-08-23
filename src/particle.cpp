@@ -6,6 +6,12 @@
 
 #include <glm/geometric.hpp>
 
+Particle::Particle(Sprite * sprite, float x, float y, float angle)
+: sprite(sprite)
+, position(x, y)
+, velocity(0.0f, 0.0f)
+, angle(angle)
+{ }
 
 Particle::Particle(Sprite & sprite, float x, float y, float angle)
 : sprite(&sprite)
@@ -17,6 +23,7 @@ Particle::Particle(Sprite & sprite, float x, float y, float angle)
 
 void Particle::Render() const
 {
+	if (sprite)
 	sprite->Render((int)position.x, (int)position.y, angle);
 }
 

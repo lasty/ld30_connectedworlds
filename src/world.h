@@ -10,21 +10,7 @@
 
 #include <glm/vec2.hpp>
 
-//#include "mapdata.h"
-
-enum class ent
-{
-	none,
-	player,
-	coin
-};
-
-enum class tile
-{
-	none,
-	ground,
-	brick
-};
+#include "gamedefs.h"
 
 
 class MapTile
@@ -186,19 +172,16 @@ public:
 
 	void ExpandTerrain(int minx, int miny, int maxx, int maxy, Generator &gen)
 	{
-		std::cout << "\nGenerating Map: " << std::endl;
 		for(int x=minx; x<=maxx; x++)
 		{
 			for(int y=miny; y<=maxy; y++)
 			{
-				std::cout << "x: " << x << " y:" << y << "  HasXY(): " << HasXY(x,y) << std::endl;
 				if (not HasXY(x, y))
 				{
 					SetXY(x, y, gen(x, y));
 				}
 			}
 		}
-		std::cout << "\n" << std::endl;
 	}
 
 	std::string GetName() const { return world_name; }
@@ -227,6 +210,52 @@ public:
 
 			AddEntity(e);
 		}
+	}
+
+	void UpdateObjects(float dt)
+	{
+
+		int new_coins = 0;
+/*
+		for(auto &c : coins)
+		{
+			c.Update(dt);
+			if (player.HasCollision(c))
+			{
+				c.Kill();
+				mixer.PlaySound(sound2);
+				coins_score++;
+				new_coins++;
+			}
+		}
+*/
+
+		// lambda function to test whether we should remove this particle
+		//const auto not_alive = [](Particle &p) { return not p.alive; };
+
+		// Remove any dead particles/coins...
+		//
+		// If you haven't seen this pattern before it can be confusing.
+		// "remove_if" partitions the vector with a predicate function.
+		// Anything returning true gets moved to the end.  It returns an
+		// iterator marking the partition point.  Next we call erase to
+		// actually remove the requested items (if any).
+		//
+
+/*
+		auto partition = std::remove_if(particles.begin(), particles.end(), not_alive);
+		particles.erase(partition, particles.end());
+*/
+
+		// Repeat for coins
+
+/*
+		auto partition2 = std::remove_if(coins.begin(), coins.end(), not_alive);
+		coins.erase(partition2, coins.end());
+*/
+
+		// Add any new coins here.  We can't do this inside the loops above.
+		AddCoins(new_coins);
 	}
 };
 
