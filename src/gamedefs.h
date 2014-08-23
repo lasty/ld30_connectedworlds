@@ -14,10 +14,14 @@ enum class ent
 enum class tile
 {
 	none,
-	ground,
-	brick
+	grass,
+	dirt,
+	stone,
+	ore
 };
 
+
+bool CanCollide(const tile &td);
 
 
 

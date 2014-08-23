@@ -17,62 +17,10 @@
 #include "player.h"
 
 
-class MapTile
-{
-public:
-	tile tiledef = tile::none;
-	int data = 0;
-	//bool can_collide = false;
+#include "maptile.h"
 
-	MapTile() { }
-	MapTile(const tile &t, int d=0) : tiledef(t), data(d) { }
+#include "generators.h"
 
-};
-
-
-
-class Generator
-{
-public:
-	virtual MapTile operator()(int x, int y) = 0;
-	virtual std::string GetName() const = 0;
-};
-
-
-class OverworldGenerator : public Generator
-{
-public:
-	MapTile operator()(int x, int y) override
-	{
-		int r = random_int(0, 100);
-
-		tile t = tile::ground;
-		if (r > 90) t = tile::brick;
-
-		MapTile m{t, 0};
-		return m;
-	}
-
-	std::string GetName() const override { return "OverWorld"; }
-};
-
-
-class UnderworldGenerator : public Generator
-{
-public:
-	MapTile operator()(int x, int y) override
-	{
-		int r = random_int(0, 100);
-
-		tile t = tile::brick;
-		if (r > 80) t = tile::ground;
-
-		MapTile m{t, 0};
-		return m;
-	}
-
-	std::string GetName() const override { return "UnderWorld"; }
-};
 
 struct MapPos
 {
@@ -87,24 +35,15 @@ struct MapPos
 
 class World
 {
+	Generator &gen;
 public:
-	World(int which)
+	World(Generator &gen)
+	:gen(gen)
 	{
-		if (which == 1)
-		{
-			OverworldGenerator gen;
-			NewWorld(gen);
-		}
-		else if (which == 0)
-		{
-			UnderworldGenerator gen;
-			NewWorld(gen);
-		}
-		else throw std::logic_error("world number not defined");
+		NewWorld();
 	}
 
-
-	void NewWorld(Generator &gen)
+	void NewWorld()
 	{
 		ClearMap();
 
@@ -122,6 +61,10 @@ public:
 
 	std::vector<Entity> entities;
 
+	Player player { *this };
+
+	Player & GetPlayer() { return player; }
+	const Player & GetPlayer() const { return player; }
 
 	void ClearMap()
 	{
@@ -165,23 +108,7 @@ public:
 	bool HasTileCollision(int x, int y) const
 	{
 		const MapTile &m = GetXY(x,y);
-		return CanCollide(m);
-	}
-
-	bool CanCollide(const MapTile &td) const
-	{
-		switch (td.tiledef)
-		{
-			case tile::none:
-			case tile::brick:
-				return true;
-
-			case tile::ground:
-				return false;
-
-			default:
-				return true;
-		}
+		return CanCollide(m.tiledef);
 	}
 
 

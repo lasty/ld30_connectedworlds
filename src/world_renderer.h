@@ -20,10 +20,13 @@ public:
 	WorldRenderer(sdl::Renderer &renderref) : renderer(renderref) { }
 
 private:
-	sdl::Texture sprite_texture { renderer, FindFile("sprites.png") };
+	sdl::Texture sprite_texture { renderer, FindFile("terrain.png") };
 
-	Tile brick { renderer, sprite_texture, { 0, 0, 64, 64} };
-	Tile ground { renderer, sprite_texture, { 64, 0, 64, 64} };
+	Tile grass { renderer, sprite_texture, { 0, 0, 64, 64} };
+	Tile dirt { renderer, sprite_texture, { 64, 0, 64, 64} };
+	Tile stone { renderer, sprite_texture, { 0, 64, 64, 64} };
+	Tile ore { renderer, sprite_texture, { 64, 64, 64, 64} };
+
 	Tile none_tile { renderer, sprite_texture, { 0, 0, 0, 0} };
 
 
@@ -50,10 +53,11 @@ public:
 	{
 		switch (mt.tiledef)
 		{
-			case tile::ground:
-				return ground;
-			case tile::brick:
-				return brick;
+			case tile::grass: return grass;
+			case tile::dirt: return dirt;
+			case tile::stone: return stone;
+			case tile::ore: return ore;
+
 			default:
 				return none_tile;
 		}

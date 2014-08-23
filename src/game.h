@@ -39,6 +39,7 @@ const int mapheight = windowheight/64 + 1;
 #include "entity_renderer.h"
 #include "sound_manager.h"
 
+#include "generators.h"
 
 // Main game app class.
 
@@ -53,22 +54,27 @@ public:
 
 	SoundManager sounds { mixer };
 
-	World overworld { 1 };
-	World underworld { 0 };
+	OverworldGenerator gen_over;
+	UnderworldGenerator gen_under;
+
+	World overworld { gen_over };
+	World underworld { gen_under };
 
 	int whichworld = 1;  //1 = overworld, 0 = underworld
 	World & GetWorld() {  return whichworld==0? underworld : overworld; }
 	const World & GetWorld() const {  return whichworld==0? underworld : overworld; }
 
+	Player & GetPlayer() { return GetWorld().GetPlayer(); }
+	const Player & GetPlayer() const { return GetWorld().GetPlayer(); }
+
 	void SwitchWorlds()
 	{
+		GetPlayer().LostFocus();
 		whichworld = whichworld==0? 1: 0;
 		hud.SetWorldName();
 	 }
 
 	int coins_score = 0; //Player's Score
-
-	Player player {overworld};
 
 
 	GameApp()
@@ -77,7 +83,7 @@ public:
 		//initialize the map with enough items
 		//map.insert(map.begin(), (mapwidth*mapheight), false);
 
-		NewMap();
+		//NewMap();
 
 		//NewCoin(10);
 	}
@@ -85,6 +91,8 @@ public:
 	//ground everywhere except borders are brick walls
 	void NewMap()
 	{
+		overworld.NewWorld();
+		underworld.NewWorld();
 /*
 		for (int x=0; x<mapwidth; x++)
 		{
@@ -111,9 +119,6 @@ public:
 
 	void RenderEntities() const
 	{
-		const World & world = GetWorld();
-
-		entity_renderer.RenderEntities(world);
 	}
 
 
@@ -127,38 +132,19 @@ public:
 	//Render all particles, coins, player
 	void RenderObjects() const
 	{
-		RenderEntities();
+		const World & world = GetWorld();
 
+		entity_renderer.RenderEntities(world);
+
+		const Player& player = GetPlayer();
 		entity_renderer.RenderPlayer(player);
 	}
 
 
 	void UpdatePlayer(float dt)
 	{
-		player.Update(dt);
-
-/*
-		if (player.HasCollision(GetWorld()))
-		{
-			std::cout << "Colliding in world" << std::endl;
-			player.velocity.x *= -1.0f;
-			player.velocity.y *= -1.0f;
-		}
-*/
-
-		/*
-		//Simple border testing
-		float minx = 64.0f - player.radius;;
-		float miny = 64.0f - player.radius;;
-		if (player.position.x <= minx) { player.position.x = minx;  player.velocity.x *= -1.0f; }
-		if (player.position.y <= miny) { player.position.y = miny;  player.velocity.y *= -1.0f; }
-
-		float maxx = ((mapwidth-2)*64.0f) + player.radius;
-		float maxy = ((mapheight-2)*64.0f) + player.radius;
-		if (player.position.x >= maxx) { player.position.x = maxx;  player.velocity.x *= -1.0f; }
-		if (player.position.y >= maxy) { player.position.y = maxy;  player.velocity.y *= -1.0f; }
-		*/
-
+		overworld.GetPlayer().Update(dt);
+		underworld.GetPlayer().Update(dt);
 	}
 
 
@@ -226,13 +212,17 @@ public:
 			{
 				SwitchWorlds();
 			}
+			else if (e.keysym.sym == SDLK_n)
+			{
+				NewMap();
+			}
 		}
 
 		auto k = e.keysym.sym;
 
-		if (k == SDLK_a or k == SDLK_LEFT) {  player.turning_left = keydown; }
-		if (k == SDLK_d or k == SDLK_RIGHT) {  player.turning_right = keydown; }
-		if (k == SDLK_w or k == SDLK_UP) {  player.thrusting = keydown; }
+		if (k == SDLK_a or k == SDLK_LEFT) {  GetPlayer().turning_left = keydown; }
+		if (k == SDLK_d or k == SDLK_RIGHT) {  GetPlayer().turning_right = keydown; }
+		if (k == SDLK_w or k == SDLK_UP) {  GetPlayer().thrusting = keydown; }
 	}
 };
 

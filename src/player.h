@@ -29,6 +29,12 @@ public:
 	bool turning_right = false;
 	bool thrusting = false;
 
+	void LostFocus()
+	{
+		turning_left = false;
+		turning_right = false;
+		thrusting = false;
+	}
 
 	void Update(float dt)
 	{
