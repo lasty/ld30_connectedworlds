@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+class HUD;
 
 //// Make it easier to find files depening on the build
 void AddPath(const std::string &path);
@@ -29,6 +30,11 @@ float random_rotation();
 float random_velocity();
 float random_rot_velocity();
 
+
+void SetHUD(HUD *debughud);
+
+void Debug_Rectangle(int x1, int y1, int w, int h);
+void Debug_Circle(int x, int y, int radius);
 
 
 #endif // UTILS_H

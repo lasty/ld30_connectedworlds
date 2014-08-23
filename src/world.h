@@ -12,31 +12,23 @@
 
 #include "gamedefs.h"
 
+#include "entity.h"
+#include "items.h"
+#include "player.h"
+
 
 class MapTile
 {
 public:
 	tile tiledef = tile::none;
 	int data = 0;
+	//bool can_collide = false;
 
 	MapTile() { }
 	MapTile(const tile &t, int d=0) : tiledef(t), data(d) { }
-};
-
-
-class Entity
-{
-public:
-	ent entitydef = ent::none;
-	int data = 0;
-
-	Entity() { }
-	glm::vec2 position;
-	float heading;
-
-	const glm::vec2 & GetWorldPos() const { return position; }
 
 };
+
 
 
 class Generator
@@ -170,6 +162,29 @@ public:
 	MapTile blank_tile {};
 
 
+	bool HasTileCollision(int x, int y) const
+	{
+		const MapTile &m = GetXY(x,y);
+		return CanCollide(m);
+	}
+
+	bool CanCollide(const MapTile &td) const
+	{
+		switch (td.tiledef)
+		{
+			case tile::none:
+			case tile::brick:
+				return true;
+
+			case tile::ground:
+				return false;
+
+			default:
+				return true;
+		}
+	}
+
+
 	void ExpandTerrain(int minx, int miny, int maxx, int maxy, Generator &gen)
 	{
 		for(int x=minx; x<=maxx; x++)
@@ -203,10 +218,7 @@ public:
 	{
 		for(int i=0; i<numcoins; i++)
 		{
-			Entity e;
-			e.position = glm::vec2{ random_map_width(), random_map_height()};
-			e.heading = random_rotation();
-			e.entitydef = ent::coin;
+			Coin e { random_map_width(), random_map_height(), random_rotation() };
 
 			AddEntity(e);
 		}

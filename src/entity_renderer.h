@@ -5,10 +5,11 @@
 #include "sdl/texture.h"
 #include "sprite.h"
 
-#include "gamedefs.h"
+#include "utils.h"
 
-
-#include <glm/vec2.hpp>
+class Player;
+class World;
+class Entity;
 
 
 class EntityRenderer
@@ -28,40 +29,14 @@ private:
 	Sprite none_sprite { renderer, sprite_texture, { 0, 0, 0, 0}, { 0, 0} };
 
 public:
-	void RenderEntities(const World & world) const
-	{
-		for(Entity const &e : world.entities)
-		{
-			//TODO culling
+	void RenderEntities(const World & world) const;
 
-			glm::vec2 worldpos = e.GetWorldPos();
+	void RenderEntity(const Entity &e) const;
+	void RenderPlayer(const Player &player) const;
 
-			const Sprite& sprite = GetSpriteForEntity(e);
+	void RenderRadius(const Entity &entity) const;
 
-			sprite.Render(worldpos.x, worldpos.y, e.heading);
-		}
-
-	}
-
-	void RenderPlayer(const Player &player) const
-	{
-		arrow.Render(player.position.x, player.position.y, player.angle);
-	}
-
-	const Sprite & GetSpriteForEntity(const Entity &e) const
-	{
-		switch (e.entitydef)
-		{
-			case ent::player:
-				return arrow;
-			case ent::coin:
-				return circle;
-			case ent::none:
-				return none_sprite;
-			default:
-				return none_sprite;
-		}
-	}
+	const Sprite & GetSpriteForEntity(const Entity &e) const;
 };
 
 

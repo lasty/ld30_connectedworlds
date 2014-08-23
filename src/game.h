@@ -33,62 +33,6 @@ const int mapwidth = windowwidth/64 + 1;
 const int mapheight = windowheight/64 + 1;
 
 
-//float random_map_width() { return (random_float(0.0f, mapwidth-3) + 1) * 64.0f; }
-//float random_map_height() { return (random_float(0.0f, mapheight-3) + 1) * 64.0f; }
-
-// Some more specific game entities
-/*
-class Coin : public Particle
-{
-public:
-	Coin(Sprite &sprite)
-	: Particle(sprite, random_map_width(), random_map_height(), random_rotation())
-	{
-		angle_velocity = random_rot_velocity();
-		radius = 20.0f;
-	}
-};
-
-*/
-
-// Class to control the player with
-
-class Player : public Particle
-{
-public:
-	Player()
-	: Particle(nullptr, random_float(0.0f, 20.0f), random_float(0.0f, 20.0f), random_rotation())
-	{
-		radius = 16.0f;
-		friction = 0.9f;
-	}
-
-	bool turning_left = false;
-	bool turning_right = false;
-	bool thrusting = false;
-
-
-	void Update(float dt)
-	{
-		const float turnrate = 200.0f;
-		const float thrustrate = 800.0f;
-		if (turning_left) angle -= dt * turnrate;
-		if (turning_right) angle += dt * turnrate;
-		if (thrusting)
-		{
-			float rangle = glm::radians(angle - 90.0f);  //90 degrees off, sprite points up
-
-			// convert angle to vec2
-			glm::vec2 thrustvec { glm::cos(rangle) , glm::sin(rangle) };
-
-			thrustvec = glm::normalize(thrustvec) * thrustrate * dt;
-			velocity += thrustvec;
-		}
-
-		Particle::Update(dt);
-	}
-
-};
 
 #include "hud.h"
 #include "world_renderer.h"
@@ -124,7 +68,7 @@ public:
 
 	int coins_score = 0; //Player's Score
 
-	Player player;
+	Player player {overworld};
 
 
 	GameApp()
@@ -193,6 +137,16 @@ public:
 	{
 		player.Update(dt);
 
+/*
+		if (player.HasCollision(GetWorld()))
+		{
+			std::cout << "Colliding in world" << std::endl;
+			player.velocity.x *= -1.0f;
+			player.velocity.y *= -1.0f;
+		}
+*/
+
+		/*
 		//Simple border testing
 		float minx = 64.0f - player.radius;;
 		float miny = 64.0f - player.radius;;
@@ -203,6 +157,7 @@ public:
 		float maxy = ((mapheight-2)*64.0f) + player.radius;
 		if (player.position.x >= maxx) { player.position.x = maxx;  player.velocity.x *= -1.0f; }
 		if (player.position.y >= maxy) { player.position.y = maxy;  player.velocity.y *= -1.0f; }
+		*/
 
 	}
 
@@ -245,6 +200,8 @@ public:
 	// Gets called once per frame with the time since last frame in seconds
 	void Update(float dt)
 	{
+		hud.Debug_Clear();
+
 		UpdateObjects(dt);
 
 		hud.UpdateHUD(dt);

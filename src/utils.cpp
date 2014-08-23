@@ -8,6 +8,8 @@
 
 #include <glm/gtx/random.hpp>
 
+#include "hud.h"
+
 namespace {
 
 std::vector<std::string> the_path_list;
@@ -59,4 +61,22 @@ float random_rotation() { return random_float(0.0f, 360.0f); }
 float random_velocity() { return random_float(0.0f, 10.0f); }
 float random_rot_velocity() { return random_float(-20.0f, 20.0f); }
 
+
+HUD *debug_hud = nullptr;
+
+void SetHUD(HUD *debughud)
+{
+	debug_hud = debughud;
+}
+
+
+void Debug_Rectangle(int x1, int y1, int w, int h)
+{
+	if (debug_hud) { debug_hud -> Debug_Rectangle(x1, y1, w, h); }
+}
+
+void Debug_Circle(int x, int y, int radius)
+{
+	if (debug_hud) { debug_hud -> Debug_Circle(x, y, radius); }
+}
 

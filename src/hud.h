@@ -1,6 +1,7 @@
 #ifndef HUD_H
 #define HUD_H
 
+#include "sdl/headers.h"
 #include "sdl/renderer.h"
 #include "font/font.h"
 #include "font/text.h"
@@ -8,6 +9,7 @@
 #include "utils.h"
 
 #include <sstream>
+#include <vector>
 
 class GameApp;
 
@@ -22,7 +24,12 @@ public:
 	HUD(sdl::Renderer &renderer, GameApp *gameref)
 	: game(*gameref), renderer(renderer)
 	{
+		SetHUD(this);
 	}
+
+	~HUD() { SetHUD(nullptr); }
+
+	bool debug = true;
 
 private:
 	Font font1 { FindFile("DroidSans.ttf"), 16 };
@@ -41,6 +48,18 @@ public:
 	void SetWorldName();
 
 	void RenderHUD() const;
+
+	void RenderDebug() const;
+
+	void Debug_Clear();
+
+	void Debug_Rectangle(int x, int y, int w, int h);
+	void Debug_Circle(int x, int y, int radius);
+
+private:
+	std::vector<SDL_Rect> debug_rects;
+	std::vector<SDL_Rect> debug_circles;
+
 };
 
 
