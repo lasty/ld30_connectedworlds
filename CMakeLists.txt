@@ -14,7 +14,7 @@ set(CMAKE_INSTALL_PREFIX . CACHE PATH "Install Prefix")
 set(CMAKE_BUILD_TYPE Debug CACHE STRING "(Debug|Release|RelWithDebInfo|MinSizeRel)")
 
 # This needs to be below the install prefix settings for it to work
-project(warmup30)
+project(ld30)
 
 
 # Find prerequisites (see /cmake directory for scripts)
@@ -42,14 +42,21 @@ list(APPEND ALL_SOURCES ${WARMUP_SOURCES})
 
 # Main target
 
-add_executable(warmup30 ${ALL_SOURCES})
+add_executable(ld30 ${ALL_SOURCES})
+
+
+#Because 1000 errors scrolling off the screen is extremely helpful *sarcasm sign*
+target_compile_options(ld30 PUBLIC
+$<$<CXX_COMPILER_ID:GNU>:-fmax-errors=4>
+$<$<CXX_COMPILER_ID:Clang>:-ferror-limit=1>)
+
 
 
 # Includes and library links
-target_include_directories(warmup30 PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
-target_link_libraries(warmup30 PUBLIC cpp11)
-target_link_libraries(warmup30 PRIVATE all_warnings)
-target_link_libraries(warmup30 PUBLIC SDL2 OpenGL Freetype GLM)
+target_include_directories(ld30 PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src)
+target_link_libraries(ld30 PUBLIC cpp11)
+target_link_libraries(ld30 PRIVATE all_warnings)
+target_link_libraries(ld30 PUBLIC SDL2 OpenGL Freetype GLM)
 
 
 # Setup for windows dlls required to be installed

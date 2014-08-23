@@ -1,15 +1,13 @@
 
-#Ludum Dare 30 Warmup weekend
+#Ludum Dare 30: Connected Worlds
 
 by Lasty
 
-A C++ wrapper around SDL, FreeType, SDLImage, SDLMixer,
-and a simple test game to tie it all together.
 
-Feel free to use this as base code for your own projects.
+TODO: Intro
 
 
-##Prerequisites
+##Build Prerequisites
 
 ###Build Tools:
 * CMake 3.0 or above  (2.8 won't work) 
@@ -20,7 +18,7 @@ Feel free to use this as base code for your own projects.
 * SDL_Image (2.0.0 or above)
 * SDL_Mixer (2.0.0 or above)
 * FreeType (Preferably 2.5.3 or above, should work with any 2.x)
-* GLM (0.9.5.4 or above)
+* GLM (0.9.5.1 or above)
 
 If these libraries are not installed in standard locations,
 install them to `../libs`  or `./libs`, or edit the CMakelists.txt
