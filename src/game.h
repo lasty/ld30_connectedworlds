@@ -86,6 +86,7 @@ public:
 		//NewMap();
 
 		//NewCoin(10);
+		hud.SetWorldName();
 	}
 
 	//ground everywhere except borders are brick walls

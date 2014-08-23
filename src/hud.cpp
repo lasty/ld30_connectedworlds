@@ -14,12 +14,12 @@ void HUD::UpdateHUD(float dt)
 
 	std::ostringstream cc;
 	cc << "Coins: " << game.coins_score;;
-	text_count.SetText(renderer, font1, cc.str());
+	text_count.SetText(cc.str());
 
 	std::ostringstream pc;
-	pc << "Arrows/WASD: Move.  Space: More coins.  ESC: Quit.  ";
+	pc << "Arrows/WASD: Move.  Tab: Switch worlds.  Space: More coins.  ESC: Quit.  ";
 	//pc << "Particles: " << (particles.size() + coins.size() + 1);
-	text_particle_count.SetText(renderer, font2, pc.str());
+	text_particle_count.SetText(pc.str());
 }
 
 
@@ -28,7 +28,7 @@ void HUD::SetFPS(int fps)
 	std::ostringstream ss;
 	ss << "FPS: " << fps;
 
-	text_fps.SetText(renderer, font2, ss.str());
+	text_fps.SetText(ss.str());
 	//SetTitle(ss.str());
 }
 
@@ -36,7 +36,7 @@ void HUD::SetFPS(int fps)
 void HUD::SetWorldName()
 {
 	std::string name = game.GetWorld().GetName();
-	text_worldname.SetText(renderer, font1, name);
+	text_worldname.SetText(name);
 }
 
 
@@ -44,7 +44,9 @@ void HUD::RenderHUD() const
 {
 	if (debug) { RenderDebug(); }
 
-	text_worldname.Render(renderer, 5, 5);
+	int centerx = renderer.GetWidth() / 2;
+	int textw = text_worldname.GetWidth() / 2;
+	text_worldname.Render(renderer, centerx-textw, 10);
 
 	text_count.Render(renderer, 5, -1);
 	text_particle_count.Render(renderer, -10, -1);

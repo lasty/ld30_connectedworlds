@@ -25,6 +25,15 @@ public:
 	: game(*gameref), renderer(renderer)
 	{
 		SetHUD(this);
+
+		text_worldname.box = true;
+		text_worldname.box_bottom_offset = -10;
+		text_worldname.shadow = 2;
+
+		text_fps.box = true;
+
+		text_particle_count.shadow = 1;
+		text_count.shadow = 1;
 	}
 
 	~HUD() { SetHUD(nullptr); }
@@ -32,10 +41,12 @@ public:
 	bool debug = true;
 
 private:
+	Font world_font { FindFile("RobotoSlab-Bold.ttf"), 32 };
+
 	Font font1 { FindFile("DroidSans.ttf"), 16 };
 	Font font2 { FindFile("DroidSans.ttf"), 11 };
 
-	Text text_worldname { renderer, font1, "..." };
+	Text text_worldname { renderer, world_font, "..." };
 	Text text_count { renderer, font2, "" };
 	Text text_particle_count { renderer, font2, "" };
 	Text text_fps { renderer, font2, "" };

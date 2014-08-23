@@ -31,8 +31,14 @@ public:
 	Text& operator=(const Text &copy) = delete;
 	Text& operator=(Text &&move) = default;
 
+	bool box = false;
+	int box_bottom_offset = 5;
+	int shadow = 0;
+
 private:
 	sdl::Texture texture;
+	const sdl::Renderer *renderer = nullptr;
+	Font *font = nullptr;
 	std::string str;
 
 	int width = 0;
@@ -45,7 +51,9 @@ public:
 	int GetHeight() const { return height; }
 
 
-	void SetText(const sdl::Renderer &rend, Font &font, const std::string &newstr);
+	void SetText(const std::string &newstr);
+
+	void RenderBox(const sdl::Renderer &rend, int x, int y) const;
 
 	void Render(const sdl::Renderer &rend, int x, int y) const;
 };
