@@ -24,7 +24,7 @@ private:
 
 	sdl::Texture sprite_texture { renderer, FindFile("sprites.png") };
 
-	Sprite arrow { renderer, sprite_texture, { 0, 64, 64, 64}, { 32, 32} };
+	Sprite arrow { renderer, sprite_texture, { 0, 64, 64, 64}, { 32 + 2, 32 + 4} };
 	Sprite circle { renderer, sprite_texture, { 64, 64, 64, 64}, { 32, 32} };
 	Sprite none_sprite { renderer, sprite_texture, { 0, 0, 0, 0}, { 0, 0} };
 

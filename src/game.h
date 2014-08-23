@@ -181,6 +181,8 @@ public:
 		RenderObjects();
 
 		hud.RenderHUD();
+
+		SDL_Delay(10);
 	}
 
 
@@ -221,9 +223,32 @@ public:
 
 		auto k = e.keysym.sym;
 
-		if (k == SDLK_a or k == SDLK_LEFT) {  GetPlayer().turning_left = keydown; }
-		if (k == SDLK_d or k == SDLK_RIGHT) {  GetPlayer().turning_right = keydown; }
-		if (k == SDLK_w or k == SDLK_UP) {  GetPlayer().thrusting = keydown; }
+		float dx = 0.0f;
+		float dy = 0.0f;
+		bool setx = false;
+		bool sety = false;
+		if (k == SDLK_a or k == SDLK_LEFT) {  setx = true; dx = keydown ? -1.0f : 0.0f; }
+		if (k == SDLK_d or k == SDLK_RIGHT) {  setx = true; dx = keydown ? +1.0f : 0.0f; }
+		if (k == SDLK_w or k == SDLK_UP) {  sety = true; dy = keydown ? -1.0f : 0.0f; }
+		if (k == SDLK_s or k == SDLK_DOWN) {  sety = true; dy = keydown ? +1.0f : 0.0f; }
+
+		if (setx and sety)
+		{
+			GetPlayer().SetMoveDirection(dx, dy);
+		}
+		else if (setx)
+		{
+			GetPlayer().SetMoveDirectionX(dx);
+		}
+		else if (sety)
+		{
+			GetPlayer().SetMoveDirectionY(dy);
+		}
+	}
+
+	void OnMouseMove(int x, int y) override
+	{
+		GetPlayer().SetLookAt(x, y);
 	}
 };
 

@@ -67,8 +67,8 @@ public:
 
 	OverworldGenerator()
 	{
-		tg.Add(tile::dirt, 90);
-		tg.Add(tile::grass, 10);
+		tg.Add(tile::dirt, 20);
+		tg.Add(tile::grass, 80);
 	}
 
 	MapTile operator()(int x, int y) override

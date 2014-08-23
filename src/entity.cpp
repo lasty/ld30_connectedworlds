@@ -37,11 +37,19 @@ void Entity::Update(float dt)
 		}
 	}
 
-	if (friction >= 0.0f)
+	if (apply_friction and friction >= 0.0f)
 	{
-		float fr = (1.0f - (friction * dt));
+		if (glm::length(velocity) > 0.0f)
+		{
+			glm::vec2 fricvec = glm::normalize(velocity) * friction * dt;
 
-		velocity *= fr;
+			velocity -= fricvec;
+
+			if (glm::length(velocity) < 0.01f)
+			{
+				velocity = {0.0f, 0.0f};
+			}
+		}
 	}
 }
 

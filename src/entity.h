@@ -26,6 +26,7 @@ public:
 	float heading = 0.0f;
 	float delta_heading = 0.0f;
 
+	bool apply_friction = false;
 	float friction = 0.0f;  //simulate friction
 	float ttl=0.0f; //time to live (for particle effects)
 	float radius = 32.0f;
