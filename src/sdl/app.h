@@ -5,6 +5,7 @@
 #include "sdl/init.h"
 #include "sdl/window.h"
 #include "sdl/renderer.h"
+#include "sdl/mixer.h"
 
 #include <string>
 #include <memory>
@@ -27,6 +28,7 @@ private:
 
 protected:
 	sdl::Renderer renderer { window };
+	sdl::Mixer mixer;
 
 	bool running = false;
 	long long lastframe_time = 0;

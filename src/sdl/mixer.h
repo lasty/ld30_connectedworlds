@@ -12,6 +12,7 @@ class Mixer
 public:
 	Mixer();
 	~Mixer();
+	void Quit();
 
 	//Block copy and move
 	Mixer(const Mixer &copy) = delete;
@@ -20,7 +21,6 @@ public:
 	Mixer& operator=(Mixer &&move) = delete;
 
 	int PlaySound(Sound &sound, int channel = -1);
-
 };
 
 

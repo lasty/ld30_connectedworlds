@@ -29,6 +29,13 @@ Mixer::~Mixer()
 }
 
 
+void Mixer::Quit()
+{
+	//Stops all channels.. we are about to free sound sample memory (called from App)
+	Mix_HaltChannel(-1);
+}
+
+
 int Mixer::PlaySound(Sound &sound, int channel)
 {
 	int ch = Mix_PlayChannel(channel, sound.GetChunk(), 0);

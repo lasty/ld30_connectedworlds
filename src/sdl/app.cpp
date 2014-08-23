@@ -114,6 +114,7 @@ void App::Run()
 void App::Quit()
 {
 	running = false;
+	mixer.Quit();
 }
 
 
