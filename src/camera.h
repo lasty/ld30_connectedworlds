@@ -6,6 +6,7 @@
 #include "entity.h"
 
 #include <glm/vec2.hpp>
+#include <glm/geometric.hpp>
 
 class Camera
 {

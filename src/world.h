@@ -150,6 +150,8 @@ public:
 
 	void SpawnEntity(std::shared_ptr<Entity> e)
 	{
+		if(e) e->world = this;
+
 		spawn_list.push_back(std::move(e));
 	}
 
@@ -207,27 +209,98 @@ public:
 		}
 	}
 
+
 	void UpdateObjects(float dt)
 	{
 
+		// lambda function to test whether we should remove this (is the pointer empty, or is it not alive?
+		const auto not_alive = [](std::shared_ptr<Entity> &e) { return not e or not e->StillAlive(); };
+
+		std::vector<std::shared_ptr<Entity>> inventory_items;
+
 		for(auto &e : entities)
 		{
+			if (not e) continue;
 			e->Update(dt);
 
+			//XXX duplicated code see below
 			if (player.HasCollision(*e))
 			{
-
 				if (e->CanBePickedUp() and player.CanPickup(e))
 				{
+					e->world = nullptr;
+
 					player.Pickup(std::move(e));
 					sounds.Pickup();
+				}
+
+			}
+
+			if (e and e->HasInventory()) { inventory_items.push_back(e); }
+
+		}
+
+
+		for(auto &inv : inventory_items)
+		{
+			for(auto &e : entities)
+			{
+				if (not e) continue;
+				if (inv.get() == e.get()) continue;
+
+				if (inv->HasCollision(*e))
+				{
+					if (e->CanBePickedUp() and inv->CanPickup(e))
+					{
+						e->velocity = {0.0f, 0.0f};
+						e->cooldown = -1.0f;
+						inv->Pickup(e);
+						e.reset();
+						//inv->Move(std::move(e));
+						sounds.Explosion();
+					}
 				}
 			}
 		}
 
 
-		// lambda function to test whether we should remove this (is the pointer empty, or is it not alive?
-		const auto not_alive = [](std::shared_ptr<Entity> &e) { return not e or not e->StillAlive(); };
+		for(auto &inv : inventory_items)
+		{
+			if (not inv->inventory) continue;
+
+			Debug_Circle(inv->position.x, inv->position.y, inv->radius + 5);
+
+			for(auto &e : inv->inventory->items)
+			{
+				if (not e) continue;
+				if (e.get() == inv.get()) continue;
+
+				Debug_Circle(e->position.x, e->position.y, e->radius);
+
+				Debug_Circle(player.position.x, player.position.y, player.radius);
+
+				//XXX duplicated code see above
+				if (player.HasCollision(*e))
+				{
+					if (e->CanBePickedUp() and player.CanPickup(e))
+					{
+						e->world = nullptr;
+
+						player.Pickup(e);
+						e.reset();
+						sounds.Pickup();
+					}
+				}
+
+			}
+
+			//remove dead entities inside the inventory list
+			auto & thelist = inv->inventory->items;
+			auto partition = std::remove_if(thelist.begin(), thelist.end(), not_alive);
+			thelist.erase(partition, thelist.end());
+		}
+
+
 
 		// Remove any dead entities...
 		//

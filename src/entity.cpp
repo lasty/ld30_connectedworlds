@@ -5,6 +5,9 @@
 
 #include "utils.h"
 
+#include "inventory.h"
+
+
 #include <glm/geometric.hpp>
 
 
@@ -20,19 +23,25 @@ void Entity::Update(float dt)
 		if (HasCollision(*world))
 		{
 			position = old_position;
+			auto old_velocity = velocity;
 
 			//try vertical or horizontal only
 
-			position += glm::vec2{velocity.x, 0.0f} * dt;
+			velocity.y *= -0.2f;
+			position += velocity * dt;
+
 			if (HasCollision(*world))
 			{
 				position = old_position;
-				position += glm::vec2{0.0f, velocity.y} * dt;
+				velocity = old_velocity;
+				//velocity.x = 0.0f;
+				velocity.x *= -0.2f;
+				position += velocity * dt;
 
 				if (HasCollision(*world))
 				{
 					position = old_position;
-
+					velocity = old_velocity;
 					velocity*= -0.2;
 				}
 			}
@@ -40,7 +49,7 @@ void Entity::Update(float dt)
 	}
 	else
 	{
-		position += velocity * dt;
+		//position += velocity * dt;
 	}
 
 	heading += delta_heading * dt;
@@ -111,7 +120,7 @@ bool Entity::HasCollision(const World &world) const
 	maxx = round(maxx);
 	maxy = round(maxy);
 
-	Debug_Rectangle(int(minx)*64, int(miny)*64, int(maxx-minx+1)*64, int(maxy-miny+1)*64);
+	//Debug_Rectangle(int(minx)*64, int(miny)*64, int(maxx-minx+1)*64, int(maxy-miny+1)*64);
 
 	//int tests=0;
 
@@ -151,7 +160,7 @@ bool Entity::HasCollision(float x, float y, float width, float height) const
 	// http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 
 	//Debug_Circle(position.x, position.y, radius);
-	Debug_Rectangle(x+1, y+1, width-1, height-1);
+	//Debug_Rectangle(x+1, y+1, width-1, height-1);
 
 	const float closestX = glm::clamp(position.x, x, x+width);
 	const float closestY = glm::clamp(position.y, y, y+height);
@@ -164,6 +173,7 @@ bool Entity::HasCollision(float x, float y, float width, float height) const
 
 	return distanceSquared < radiusSquared;
 }
+
 
 void Entity::Shoot(glm::vec2 from, glm::vec2 to, float speed)
 {
@@ -180,6 +190,29 @@ void Entity::Shoot(glm::vec2 from, glm::vec2 to, float speed)
 
 	SetCooldown();
 }
+
+
+bool Entity::CanPickup(std::shared_ptr<Entity> &e)
+{
+	if (inventory)
+	{
+		return inventory->CanPickup(e);
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+void Entity::Pickup(std::shared_ptr<Entity> &e)
+{
+	if (inventory)
+	{
+		return inventory->Move(e);
+	}
+}
+
 
 void Entity::DispatchPickup(Player &player)
 {

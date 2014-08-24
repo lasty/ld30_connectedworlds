@@ -129,3 +129,14 @@ void Text::Render(const sdl::Renderer &rend, int x, int y) const
 	rend.Copy(texture, nullptr, &r);
 }
 
+void Text::Render(int x, int y) const
+{
+	if (renderer)
+	{
+		Render(*renderer, x, y);
+	}
+	else
+	{
+		throw std::logic_error("Text::Render(x,y) - renderer not set");
+	}
+}

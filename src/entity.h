@@ -4,11 +4,13 @@
 
 #include "gamedefs.h"
 
+#include <memory>
+
 #include <glm/vec2.hpp>
 
 class World;
-
 class Player;
+class Inventory;
 
 class Entity
 {
@@ -38,13 +40,17 @@ public:
 
 	colour tint_colour = colour::white;
 
+	std::unique_ptr<Inventory> inventory;
+	bool HasInventory() const { return bool(inventory); }
+
+
 private:
 	bool alive = true;
 
 public:
 	void Render() const;
 
-	void Update(float dt);
+	virtual void Update(float dt);
 
 	void Kill();
 	bool StillAlive() const { return alive; }
@@ -61,7 +67,10 @@ public:
 	bool DrawCircle() const { return draw_circle; }
 
 	void SetCooldown(float c = 0.5f) { cooldown = c; }
-	bool CanBePickedUp() const { return cooldown <= 0.0f; }
+	bool CanBePickedUp() const { return (not HasInventory()) and cooldown <= 0.0f ; }
+
+	virtual bool CanPickup(std::shared_ptr<Entity> &e);
+	virtual void Pickup(std::shared_ptr<Entity> &e);
 
 	void Shoot(glm::vec2 from, glm::vec2 to, float speed);
 

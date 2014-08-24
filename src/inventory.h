@@ -104,11 +104,11 @@ class Inventory
 		}
 	}
 
-	void Move(std::shared_ptr<Entity> &&item)
+	void Move(std::shared_ptr<Entity> &item)
 	{
 		IncSlot(*item);
 
-		items.push_back(std::move(item));
+		items.push_back(item);
 	}
 
 
@@ -139,7 +139,7 @@ class Inventory
 
 		std::shared_ptr<Entity> ent;
 
-		for(int i=0; i< items.size(); i++)
+		for(unsigned i=0; i< items.size(); i++)
 		{
 			if (items[i]->entitydef == looking_for)
 			{
@@ -174,6 +174,11 @@ class Inventory
 		}
 
 		return tally;
+	}
+
+	int GetSize() const
+	{
+		return items.size();
 	}
 
 	void ChangeSlot(int i)

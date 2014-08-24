@@ -158,6 +158,8 @@ public:
 	void Debug_Rectangle(int x, int y, int w, int h);
 	void Debug_Circle(int x, int y, int radius);
 
+	Font & GetFont1() { return font1; }
+	Font & GetFont2() { return font2; }
 private:
 	mutable float debug_delay = 0.0f;
 	mutable std::vector<SDL_Rect> debug_rects;

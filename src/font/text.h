@@ -56,6 +56,8 @@ public:
 	void RenderBox(const sdl::Renderer &rend, int x, int y) const;
 
 	void Render(const sdl::Renderer &rend, int x, int y) const;
+
+	void Render(int x, int y) const;
 };
 
 #endif // FONT_TEXT_H

@@ -19,6 +19,8 @@
 
 #include "gamedefs.h"
 
+#include "shop.h"
+
 #include <glm/trigonometric.hpp>
 #include <glm/geometric.hpp>
 
@@ -62,6 +64,7 @@ public:
 	World overworld { gen_over, sounds };
 	World underworld { gen_under, sounds };
 
+	std::shared_ptr<SharedInvArea> portal;
 
 	int whichworld = 1;  //1 = overworld, 0 = underworld
 	World & GetWorld() {  return whichworld==0? underworld : overworld; }
@@ -101,6 +104,8 @@ public:
 
 		//NewCoin(10);
 		hud.SetWorldName();
+
+		InitShops();
 	}
 
 	//ground everywhere except borders are brick walls
@@ -120,7 +125,24 @@ public:
 			}
 		}
 */
+		InitShops();
 		hud.SetWorldName();
+	}
+
+	void InitShops()
+	{
+		portal.reset( new SharedInvArea(0.0f, 0.0f) );
+
+		portal->text_above.reset( new Text(renderer, hud.GetFont1(), "toptext") );
+		portal->text_below.reset( new Text(renderer, hud.GetFont2(), "bottext") );
+		portal->text_above->box = true;
+		portal->text_above->shadow = true;
+		portal->text_below->box = true;
+		portal->text_below->shadow = true;
+
+
+		overworld.SpawnEntity(portal);
+		underworld.SpawnEntity(portal);
 	}
 
 	//draw the map on screen

@@ -12,6 +12,8 @@
 #include "entity.h"
 #include "camera.h"
 
+#include "shop.h"
+
 #include "utils.h"
 
 #include <glm/vec2.hpp>
@@ -43,6 +45,26 @@ void EntityRenderer::RenderEntity(const Entity &e, const Camera &cam) const
 		SDL_SetRenderDrawColor(renderer.GetRenderer(), 0x22, 0xee, 0xee, 0xaa);
 		RenderRadius(e, cam);
 	}
+
+
+	//if it is a shop, or the portal
+	const ThingsWithInventory * shop = dynamic_cast<const ThingsWithInventory*>(&e);
+	if (shop)
+	{
+
+		//render the stuff inside
+		if (shop->inventory)
+		{
+			for(auto &e : shop->inventory->items)
+			{
+				if (e) RenderEntity(*e, cam);
+			}
+		}
+
+		//Render text
+		shop->Render(cam);
+	}
+
 }
 
 #include <glm/glm.hpp>

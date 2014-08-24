@@ -27,7 +27,7 @@ public:
 
 		friction = 800.0f;
 		apply_friction = true;
-		position.x = 50;
+		position.x = 200;
 		position.y = 50;
 
 		static int id_stat = 0;
@@ -126,7 +126,7 @@ public:
 	}
 
 
-	void Update(float dt)
+	void Update(float dt) override
 	{
 		float lookangle = VecToAngle(position, look_at);
 
@@ -190,6 +190,11 @@ public:
 
 	}
 
+	bool CanPickup(std::shared_ptr<Entity> &e)
+	{
+		return inv.CanPickup(e);
+	}
+
 	void Pickup(Entity &e)
 	{
 		//Double Dispatch pattern
@@ -215,14 +220,10 @@ public:
 		}
 	}
 
-	bool CanPickup(std::shared_ptr<Entity> &e)
-	{
-		return inv.CanPickup(e);
-	}
 
 	void Pickup(std::shared_ptr<Entity> e)
 	{
-		inv.Move(std::move(e));
+		inv.Move(e);
 	}
 
 	int GetAlive() const
