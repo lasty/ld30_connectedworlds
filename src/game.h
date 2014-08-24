@@ -76,6 +76,7 @@ public:
 		whichworld = whichworld==0? 1: 0;
 		hud.SetWorldName();
 		GetCamera().SetTransition( { 0.0f, (whichworld-0.5f) * 1000.0f} );
+		sounds.GoToWorld(whichworld);
 	 }
 
 	glm::vec2 cam_size { renderer.GetWidth(), renderer.GetHeight() };
@@ -234,7 +235,7 @@ public:
 			}
 			else if (e.keysym.sym == SDLK_SPACE)
 			{
-				sounds.Powerup();
+				sounds.Pickup();
 				NewCoin(10);
 			}
 			else if (e.keysym.sym == SDLK_TAB)
@@ -245,6 +246,28 @@ public:
 			{
 				NewMap();
 			}
+
+			else if (e.keysym.sym == SDLK_1)
+			{
+				sounds.Beep();
+			}
+			else if (e.keysym.sym == SDLK_2)
+			{
+				sounds.Explosion();
+			}
+			else if (e.keysym.sym == SDLK_3)
+			{
+				sounds.Hit();
+			}
+			else if (e.keysym.sym == SDLK_4)
+			{
+				sounds.Laser();
+			}
+			else if (e.keysym.sym == SDLK_5)
+			{
+				sounds.Pickup();
+			}
+
 		}
 
 		auto k = e.keysym.sym;
