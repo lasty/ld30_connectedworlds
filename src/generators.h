@@ -6,6 +6,7 @@
 
 #include <vector>
 
+#include <glm/gtc/noise.hpp>
 
 //base map generator class
 class Generator
@@ -67,15 +68,17 @@ public:
 
 	OverworldGenerator()
 	{
-		tg.Add(tile::dirt, 20);
-		tg.Add(tile::grass, 80);
+		tg.Add(tile::grass1, 90);
+		tg.Add(tile::grass2, 40);
+		tg.Add(tile::grass3, 20);
+		tg.Add(tile::grass4, 10);
 	}
 
 	MapTile operator()(int x, int y) override
 	{
 		tile t = tg.Get();
 
-		if (abs(x) < 2 and abs(y) < 2) t = tile::grass;
+		if (abs(x)<3 and abs(y)<3) t = tile::grass1;
 
 		MapTile m{t, 0};
 		return m;
@@ -92,17 +95,28 @@ public:
 
 	UnderworldGenerator()
 	{
-		tg.Add(tile::stone, 90);
-		tg.Add(tile::dirt, 50);
-		tg.Add(tile::ore, 10);
+		tg.Add(tile::rock1, 20);
+
+		tg.Add(tile::cave1, 90);
+		tg.Add(tile::cave2, 60);
+		tg.Add(tile::cave3, 50);
+		tg.Add(tile::cave4, 50);
+		tg.Add(tile::cave5, 20);
+		tg.Add(tile::cave6, 20);
+
+		tg.Add(tile::rock2, 20);
 	}
 
 
 	MapTile operator()(int x, int y) override
 	{
+		glm::vec2 xy1 { x, y };
+		glm::vec2 xy2 { x/100.0f, y/100.0f };
+
 		tile t = tg.Get();
 
-		if (abs(x) < 2 and abs(y) < 2) t = tile::dirt;
+
+		if (abs(x)<3 and abs(y)<3) t = tile::cave1;
 
 		MapTile m{t, 0};
 		return m;

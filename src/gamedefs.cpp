@@ -8,13 +8,25 @@ bool CanCollide(const tile &td)
 	switch (td)
 	{
 		case tile::none:
-		case tile::ore:
 			return true;
 
-		case tile::stone:
-		case tile::grass:
-		case tile::dirt:
+		case tile::grass1:
+		case tile::grass2:
+		case tile::grass3:
+		case tile::grass4:
 			return false;
+
+		case tile::cave1:
+		case tile::cave2:
+		case tile::cave3:
+		case tile::cave4:
+		case tile::cave5:
+		case tile::cave6:
+			return false;
+
+		case tile::rock1:
+		case tile::rock2:
+			return true;
 
 		default:
 			return true;

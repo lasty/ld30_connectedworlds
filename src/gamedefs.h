@@ -22,10 +22,18 @@ enum class ent
 enum class tile
 {
 	none,
-	grass,
-	dirt,
-	stone,
-	ore
+	grass1,
+	grass2,
+	grass3,
+	grass4,
+	cave1,
+	cave2,
+	cave3,
+	cave4,
+	cave5,
+	cave6,
+	rock1,
+	rock2
 };
 
 enum class colour
