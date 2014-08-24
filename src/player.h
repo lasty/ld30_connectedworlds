@@ -5,6 +5,9 @@
 
 #include "entity.h"
 
+#include "inventory.h"
+
+
 #include <glm/vec2.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/geometric.hpp>
@@ -34,7 +37,14 @@ public:
 
 	int id = -1;
 
-	int coins = 0;
+	float health = 100.0f;
+
+	float hunger = 0.0f;
+	float hunger_max = 100.0f;
+	float hunger_per_second = 0.1f;
+
+	Inventory inv;
+
 
 	glm::vec2 control_stick;
 	glm::vec2 look_at;
@@ -159,6 +169,23 @@ public:
 		}
 
 		Entity::Update(dt);
+
+		hunger -= hunger_per_second * dt;
+		if (hunger < 0.0f)
+		{
+			hunger = 0.0f;
+			health -= 1.0f * dt;
+		}
+
+		if (health < 0.0f)
+		{
+			Kill();
+		}
+		else if (health >= 100.0f)
+		{
+			health -= 1.0f * dt;
+		}
+
 	}
 
 	void Pickup(Entity &e)
@@ -169,12 +196,41 @@ public:
 
 	void Pickup(Coin &c)
 	{
-		coins += c.coin_value;
+		//coins += c.coin_value;
 	}
 
-	int GetNumCoins() const
+	void Pickup(Food &f)
 	{
-		return coins;
+		std::cout << "Yum (food value " << f.food_value <<")" << std::endl;
+		//coins += c.coin_value;
+		if (hunger < hunger_max)
+		{
+			hunger+= f.food_value;
+		}
+		else
+		{
+			//
+		}
+	}
+
+	int GetAlive() const
+	{
+		return (health > 0.0f);
+	}
+
+	int GetCash() const
+	{
+		return inv.CountCoins();
+	}
+
+	int GetHungerPercent() const
+	{
+		return hunger * 100 / hunger_max;
+	}
+
+	int GetHealthPercent() const
+	{
+		return health * 100 / 100;
 	}
 
 };

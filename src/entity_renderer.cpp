@@ -40,7 +40,7 @@ void EntityRenderer::RenderEntity(const Entity &e, const Camera &cam) const
 
 	if (e.DrawCircle())
 	{
-		SDL_SetRenderDrawColor(renderer.GetRenderer(), 0xee, 0xbb, 0x22, 0xaa);
+		SDL_SetRenderDrawColor(renderer.GetRenderer(), 0x22, 0xee, 0xee, 0xaa);
 		RenderRadius(e, cam);
 	}
 }
@@ -110,7 +110,7 @@ void EntityRenderer::SetupCircle()
 
 void EntityRenderer::RenderRadius(const Entity &entity, const Camera &cam) const
 {
-	const float radius = entity.radius + 8;
+	const float radius = entity.radius;
 	glm::vec2 worldpos = entity.GetWorldPos();
 	worldpos -= cam.GetOffset();
 
@@ -133,9 +133,23 @@ const Sprite & EntityRenderer::GetSpriteForEntity(const Entity &e) const
 	switch (e.entitydef)
 	{
 		case ent::player:
-			return arrow;
+			return player_head;
+
 		case ent::coin:
-			return circle;
+		case ent::coin_silver:
+			return coin_cents;
+
+		case ent::coin_gold:
+			return coin_dollar;
+
+		case ent::food:
+		case ent::food1:
+			return food_ration;
+		case ent::food2:
+			return food_potatosalad;
+		case ent::food3:
+			return food_ham;
+
 		case ent::none:
 			return none_sprite;
 		default:

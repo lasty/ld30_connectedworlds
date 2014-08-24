@@ -7,7 +7,13 @@ enum class ent
 {
 	none,
 	player,
-	coin
+	coin,
+	coin_gold,
+	coin_silver,
+	food,
+	food1,
+	food2,
+	food3
 };
 
 

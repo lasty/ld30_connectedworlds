@@ -28,11 +28,21 @@ void HUD::UpdateHUD(float dt)
 void HUD::SetInventory(Player &player)
 {
 	std::ostringstream cc;
-	int dollars = player.GetNumCoins() / 100;
-	int cents = player.GetNumCoins() % 100;
+	int coins = player.GetCash();
+
+	int dollars = coins / 100;
+	int cents = coins % 100;
 	cc << "Coins: $" << dollars <<".";
 	cc << std::setw(2) << std::setfill('0');  cc<<cents;
-	text_count.SetText(cc.str());
+	text_inv_coins.SetText(cc.str());
+
+	std::ostringstream health;
+	health << "Health: " << player.GetHealthPercent() << "%";
+	text_inv_health.SetText(health.str());
+
+	std::ostringstream hunger;
+	hunger << "Hunger: " << player.GetHungerPercent() << "%";
+	text_inv_hunger.SetText(hunger.str());
 }
 
 void HUD::SetFPS(int fps)
@@ -60,7 +70,12 @@ void HUD::RenderHUD(const Camera &cam) const
 	int textw = text_worldname.GetWidth() / 2;
 	text_worldname.Render(renderer, centerx-textw, 10);
 
-	text_count.Render(renderer, 5, -1);
+	//inventory/health/hunger
+	text_inv_coins.Render(renderer, 5, -1);
+	text_inv_hunger.Render(renderer, 5, -16);
+	text_inv_health.Render(renderer, 5, -32);
+
+
 	text_particle_count.Render(renderer, -10, -1);
 
 	text_fps.Render(renderer, -5, 5);

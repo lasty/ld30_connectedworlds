@@ -34,7 +34,10 @@ public:
 		text_fps.box = true;
 
 		text_particle_count.shadow = 1;
-		text_count.shadow = 1;
+
+		text_inv_coins.shadow = 1;
+		text_inv_health.shadow = 1;
+		text_inv_hunger.shadow = 1;
 	}
 
 	~HUD() { SetHUD(nullptr); }
@@ -48,9 +51,12 @@ private:
 	Font font2 { FindFile("DroidSans.ttf"), 11 };
 
 	Text text_worldname { renderer, world_font, "..." };
-	Text text_count { renderer, font2, "" };
 	Text text_particle_count { renderer, font2, "" };
 	Text text_fps { renderer, font2, "" };
+
+	Text text_inv_coins { renderer, font2, "" };
+	Text text_inv_health { renderer, font2, "" };
+	Text text_inv_hunger { renderer, font2, "" };
 
 public:
 	void UpdateHUD(float dt);

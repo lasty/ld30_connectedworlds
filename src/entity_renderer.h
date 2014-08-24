@@ -29,11 +29,19 @@ public:
 
 private:
 
-	sdl::Texture sprite_texture { renderer, FindFile("sprites.png") };
+	sdl::Texture item_texture { renderer, FindFile("items.png") };
 
-	Sprite arrow { renderer, sprite_texture, { 0, 64, 64, 64}, { 32 + 2, 32 + 4} };
-	Sprite circle { renderer, sprite_texture, { 64, 64, 64, 64}, { 32, 32} };
-	Sprite none_sprite { renderer, sprite_texture, { 0, 0, 0, 0}, { 0, 0} };
+	//Sprite arrow { renderer, sprite_texture, { 0, 64, 64, 64}, { 32 + 2, 32 + 4} };
+	Sprite coin_dollar { renderer, item_texture, { 0, 0, 32, 32}, { 16, 16} };
+	Sprite coin_cents { renderer, item_texture, { 32, 0, 32, 32}, { 16, 16} };
+
+	Sprite none_sprite { renderer, item_texture, { 0, 0, 0, 0}, { 0, 0} };
+
+
+	Sprite food_ration { renderer, item_texture, { 0, 32, 32, 32}, { 16, 16} };
+	Sprite food_potatosalad { renderer, item_texture, { 32, 32, 32, 32}, { 16, 16} };
+	Sprite food_ham { renderer, item_texture, { 64, 32, 32, 32}, { 16, 16} };
+
 
 
 	sdl::Texture player_texture { renderer, FindFile("player.png") };

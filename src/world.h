@@ -52,7 +52,8 @@ public:
 		//ExpandTerrain(0, 0, 5, 5, gen);
 		world_name = gen.GetName();
 
-		AddCoins(100);
+		AddCoins(50);
+		AddFood(50);
 
 		std::cout << "New world '" << world_name << "' mapsize is " << terrain.size() << std::endl;
 	}
@@ -151,11 +152,32 @@ public:
 
 	void SpawnEntity(const std::string what, int x, int y, int data = 0)
 	{
-		if (what == "coin")
+		if (what == "coin1")
 		{
-			int cointype = random_int(0, 2);
-			SpawnEntity(std::make_shared<Coin>(x, y, cointype));
+			SpawnEntity(std::make_shared<Coin_Cent>(x, y));
 		}
+		else if (what == "coin10")
+		{
+			SpawnEntity(std::make_shared<Coin_Silver>(x, y));
+		}
+		else if (what == "coin100")
+		{
+			SpawnEntity(std::make_shared<Coin_Gold>(x, y));
+		}
+		else if (what == "food1")
+		{
+			SpawnEntity(std::make_shared<Food_Ration>(x, y));
+		}
+		else if (what == "food2")
+		{
+			SpawnEntity(std::make_shared<Food_PotatoSalad>(x, y));
+
+		}
+		else if (what == "food3")
+		{
+			SpawnEntity(std::make_shared<Food_Roast>(x, y));
+		}
+
 		else
 		{
 			std::cout << "SpawnEntity:  Unknown Entity '" << what << "'" << std::endl;
@@ -166,7 +188,19 @@ public:
 	{
 		for(int i=0; i<numcoins; i++)
 		{
-			SpawnEntity("coin", random_map_width(), random_map_height());
+			SpawnEntity("coin1", random_map_width(), random_map_height());
+			SpawnEntity("coin10", random_map_width(), random_map_height());
+			SpawnEntity("coin100", random_map_width(), random_map_height());
+		}
+	}
+
+	void AddFood(int num=1)
+	{
+		for(int i=0; i<num; i++)
+		{
+			SpawnEntity("food1", random_map_width(), random_map_height());
+			SpawnEntity("food2", random_map_width(), random_map_height());
+			SpawnEntity("food3", random_map_width(), random_map_height());
 		}
 	}
 
@@ -184,7 +218,7 @@ public:
 				e->Kill();
 				sounds.Pickup();
 				//coins_score++;
-				AddCoins(1);
+				//AddCoins(1);
 			}
 		}
 

@@ -238,6 +238,7 @@ public:
 			{
 				sounds.Pickup();
 				NewCoin(10);
+				GetWorld().AddFood(10);
 			}
 			else if (e.keysym.sym == SDLK_TAB)
 			{
