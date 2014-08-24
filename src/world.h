@@ -56,8 +56,12 @@ public:
 		//ExpandTerrain(0, 0, 5, 5, gen);
 		world_name = gen.GetName();
 
-		AddCoins(50);
-		AddFood(50);
+		// XXX argh moved it to game
+		//gen.SpawnEntities(this);
+		//AddCoins(50);
+		//AddFood(50);
+
+		player.Reset();
 
 		std::cout << "New world '" << world_name << "' mapsize is " << terrain.size() << std::endl;
 	}
@@ -188,6 +192,18 @@ public:
 			std::cout << "SpawnEntity:  Unknown Entity '" << what << "'" << std::endl;
 		}
 	}
+
+
+	void SpawnShopEntity(const std::string what, int x, int y, int data = 0)
+	{
+		SpawnEntity(what, x, y);
+
+		//XXX hackery,  get last added item .. will probably crash if entity name is not valid
+		auto &e = spawn_list.back();
+
+		e->velocity = { random_float(-300, 300), random_float(-300, 300) };
+	}
+
 
 	void AddCoins(int numcoins=1)
 	{

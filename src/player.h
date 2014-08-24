@@ -27,14 +27,14 @@ public:
 
 		friction = 800.0f;
 		apply_friction = true;
-		position.x = 200;
-		position.y = 50;
 
 		static int id_stat = 0;
 		id = id_stat++;
 
 		if (id == 0) tint_colour = colour::blue;
 		if (id == 1) tint_colour = colour::red;
+
+		Reset();
 	}
 
 	int id = -1;
@@ -58,6 +58,18 @@ public:
 	//bool running = false;
 	float walk_timer_legs = 0.0f;
 	float walk_timer_arms = 0.0f;
+
+	void Reset()
+	{
+		health = 100.0f;
+
+		hunger = 50.0f;
+		inv.Clear();
+
+		position = { 0.0f, -40.0f };
+		velocity = { 0.0f, 0.0f };
+
+	}
 
 	void SetMoveDirection(float x, float y)
 	{
@@ -243,7 +255,7 @@ public:
 
 	int GetHealthPercent() const
 	{
-		return health * 100 / 100;
+		return health;
 	}
 
 	Inventory & GetInventory() { return inv; }

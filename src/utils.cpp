@@ -4,7 +4,9 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <sstream>
 #include <fstream>
+#include <iomanip>
 
 #include <glm/gtx/random.hpp>
 
@@ -138,4 +140,17 @@ void SetDrawColour(sdl::Renderer &renderer, colour tint)
 	SDL_SetRenderDrawColor(renderer.GetRenderer(), col.r, col.g, col.b, col.a);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+
+
+std::string FormatMoney(int coins)
+{
+	int dollars = coins / 100;
+	int cents = coins % 100;
+	std::stringstream cc;
+	cc << "$" << dollars <<".";
+	cc << std::setw(2) << std::setfill('0');  cc<<cents;
+
+	return cc.str();
+}
 

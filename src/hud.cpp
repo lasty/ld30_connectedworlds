@@ -9,6 +9,8 @@
 #include "camera.h"
 #include "player.h"
 
+#include "utils.h"
+
 #include "sdl/headers.h"
 
 #include <iomanip>
@@ -19,22 +21,18 @@ void HUD::UpdateHUD(float dt)
 
 	SetInventory(game.GetPlayer());
 
-	std::ostringstream pc;
-	pc << "Arrows/WASD: Move.  Tab: Switch worlds.  Space: More coins.  ESC: Quit.  ";
-	//pc << "Particles: " << (particles.size() + coins.size() + 1);
-	text_particle_count.SetText(pc.str());
+	text_help1.SetText( "Tab: Switch Worlds,  Arrows/WASD: Move,  Mouse: Aim,  ESC: Quit");
+	text_help2.SetText("1-5: Inventory Slot,  LeftClick: Use Item,  RightClick: Throw Item");
 }
+
 
 void HUD::SetInventory(Player &player)
 {
-	std::ostringstream cc;
 	int coins = player.GetCash();
 
-	int dollars = coins / 100;
-	int cents = coins % 100;
-	cc << "Coins: $" << dollars <<".";
-	cc << std::setw(2) << std::setfill('0');  cc<<cents;
-	text_inv_coins.SetText(cc.str());
+	std::stringstream ss;
+	ss << "Coins: " << FormatMoney(coins);
+	text_inv_coins.SetText(ss.str());
 
 	for(auto &i : inv_slots)
 	{
@@ -49,6 +47,7 @@ void HUD::SetInventory(Player &player)
 	hunger << "Hunger: " << player.GetHungerPercent() << "%";
 	text_inv_hunger.SetText(hunger.str());
 }
+
 
 void HUD::SetFPS(int fps)
 {
@@ -85,8 +84,8 @@ void HUD::RenderHUD(const Camera &cam) const
 		i.Render();
 	}
 
-
-	text_particle_count.Render(renderer, -10, -1);
+	text_help1.Render(renderer, -10, -24);
+	text_help2.Render(renderer, -10, -1);
 
 	text_fps.Render(renderer, -5, 5);
 }

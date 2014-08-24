@@ -9,6 +9,7 @@
 
 #include "font/text.h"
 class Camera;
+class World;
 
 class ThingsWithInventory : public Entity
 {
@@ -16,6 +17,8 @@ public:
 	ThingsWithInventory(float x, float y)
 	: Entity( ent::none, 64.0f )
 	{
+		position.x = x;
+		position.y = y;
 
 		inventory.reset(new Inventory());
 		draw_circle = true;
@@ -39,7 +42,7 @@ public:
 	SharedInvArea(float x, float y)
 	: ThingsWithInventory(x,y)
 	{
-		name = "SharedArea";
+		name = "Shared Area";
 	}
 
 };
@@ -49,11 +52,26 @@ public:
 class Shop : public ThingsWithInventory
 {
 public:
-	Shop(float x, float y)
+	Shop(World &world, float x, float y, std::string sell, std::string spawn, int price)
 	: ThingsWithInventory(x,y)
+	, world(world)
+	, selling_item(sell)
+	, spawn_item(spawn)
+	, price(price)
 	{
 		name = "Shop";
 	}
+
+	World &world;
+
+	std::string selling_item = "Nothing";
+	std::string spawn_item = "nothing";
+
+	int price = 99;
+
+	bool CanPickup(std::shared_ptr<Entity> &e) override;
+
+	void Update(float dt) override;
 
 };
 

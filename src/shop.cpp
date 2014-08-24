@@ -4,6 +4,7 @@
 #include "font/text.h"
 
 #include "camera.h"
+#include "world.h"
 
 #include <sstream>
 
@@ -16,18 +17,25 @@ void ThingsWithInventory::Render(const Camera &cam) const
 
 	if (text_above)
 	{
-		float w = text_above->GetWidth();
-		float h = text_above->GetHeight();
+		float xx = pos.x - text_above->GetWidth()/2;
+		float yy = pos.y - radius - text_above->GetHeight();
 
-		text_above->Render(pos.x - w/2, pos.y - radius - h);
+		if (xx > 0 and yy > 0) //because of text auto positioning
+		{
+			text_above->Render(xx, yy);
+		}
 	}
 
 	if (text_below)
 	{
-		float w = text_below->GetWidth();
-		//float h = text_below->GetHeight();
+		float xx = pos.x - text_below->GetWidth()/2;
+		float yy = pos.y + radius;
 
-		text_below->Render(pos.x - w/2, pos.y + radius);
+
+		if (xx > 0 and yy > 0) //because of text auto positioning
+		{
+			text_below->Render(xx, yy);
+		}
 	}
 
 }
@@ -45,7 +53,13 @@ void ThingsWithInventory::Update(float dt)
 		std::stringstream ss;
 		if (inventory)
 		{
-			ss << "Num Items: " << inventory->GetSize();
+			ss << inventory->GetSize() << " Items";
+
+			int money = inventory->CountCoins();
+			if(money)
+			{
+				ss << " - " << FormatMoney(money);
+			}
 		}
 		else
 		{
@@ -67,3 +81,51 @@ void ThingsWithInventory::Update(float dt)
 */
 
 }
+
+
+
+bool Shop::CanPickup(std::shared_ptr<Entity> &e)
+{
+	Coin *c = dynamic_cast<Coin*>(e.get());
+	return c;
+}
+
+
+
+void Shop::Update(float dt)
+{
+	if (text_above)
+	{
+		std::stringstream ss;
+		ss << selling_item << "  Shop  " << FormatMoney(price);
+
+		text_above->SetText(ss.str());
+	}
+
+	int money = inventory->CountCoins();
+
+	if (text_below)
+	{
+		std::stringstream ss;
+		if (inventory)
+		{
+			ss << FormatMoney(money);
+		}
+		else
+		{
+			ss << "No inventory";
+		}
+		text_below->SetText(ss.str());
+	}
+
+	draw_circle = true;
+
+
+	if (money >= price)
+	{
+		world.SpawnShopEntity(spawn_item, position.x, position.y);
+		inventory->Clear();  //XXX No change!
+	}
+}
+
+

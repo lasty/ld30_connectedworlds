@@ -176,6 +176,16 @@ class Inventory
 		return tally;
 	}
 
+	void Clear()
+	{
+		items.clear();
+		for(int i=0; i<5; i++)
+		{
+			slots[i] = ent::none;
+			slots_count[i] = 0;
+		}
+	}
+
 	int GetSize() const
 	{
 		return items.size();

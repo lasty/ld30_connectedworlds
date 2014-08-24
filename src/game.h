@@ -66,6 +66,10 @@ public:
 
 	std::shared_ptr<SharedInvArea> portal;
 
+	std::shared_ptr<Shop> shop1;
+	std::shared_ptr<Shop> shop2;
+	std::shared_ptr<Shop> shop3;
+
 	int whichworld = 1;  //1 = overworld, 0 = underworld
 	World & GetWorld() {  return whichworld==0? underworld : overworld; }
 	const World & GetWorld() const {  return whichworld==0? underworld : overworld; }
@@ -105,6 +109,7 @@ public:
 		//NewCoin(10);
 		hud.SetWorldName();
 
+		SpawnWorldEntities();
 		InitShops();
 	}
 
@@ -125,24 +130,54 @@ public:
 			}
 		}
 */
+		SpawnWorldEntities();
+
 		InitShops();
 		hud.SetWorldName();
 	}
 
+	void SpawnWorldEntities()
+	{
+		overworld.AddCoins(10);
+		underworld.AddCoins(50);
+	}
+
+	void SetShopText(ThingsWithInventory &shop)
+	{
+		shop.text_above.reset( new Text(renderer, hud.GetFont1(), "toptext") );
+		shop.text_below.reset( new Text(renderer, hud.GetFont2(), "bottext") );
+		shop.text_above->box = true;
+		shop.text_above->shadow = true;
+		shop.text_below->box = true;
+		shop.text_below->shadow = true;
+	}
+
 	void InitShops()
 	{
-		portal.reset( new SharedInvArea(0.0f, 0.0f) );
+		portal.reset( new SharedInvArea(150.0f, 50.0f) );
 
-		portal->text_above.reset( new Text(renderer, hud.GetFont1(), "toptext") );
-		portal->text_below.reset( new Text(renderer, hud.GetFont2(), "bottext") );
-		portal->text_above->box = true;
-		portal->text_above->shadow = true;
-		portal->text_below->box = true;
-		portal->text_below->shadow = true;
+		SetShopText(*portal);
 
 
 		overworld.SpawnEntity(portal);
 		underworld.SpawnEntity(portal);
+
+		int shopy = -200;
+		int shopx = -300;
+		int shopspacing = 500;
+
+
+		shop1.reset( new Shop(overworld, shopx + 0*shopspacing, shopy, "Ration", "food1", 100) );
+		SetShopText(*shop1);
+		overworld.SpawnEntity(shop1);
+
+		shop2.reset( new Shop(overworld, shopx + 1*shopspacing, shopy, "Potato Salad", "food2", 700) );
+		SetShopText(*shop2);
+		overworld.SpawnEntity(shop2);
+
+		shop3.reset( new Shop(overworld, shopx + 2*shopspacing, shopy, "Ham", "food3", 1000) );
+		SetShopText(*shop3);
+		overworld.SpawnEntity(shop3);
 	}
 
 	//draw the map on screen

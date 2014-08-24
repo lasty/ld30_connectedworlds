@@ -106,7 +106,10 @@ public:
 
 		text_fps.box = true;
 
-		text_particle_count.shadow = 1;
+		text_help1.box = true;
+		text_help2.box = true;
+		text_help1.shadow = 1;
+		text_help2.shadow = 1;
 
 		text_inv_coins.shadow = 1;
 		text_inv_health.shadow = 1;
@@ -131,7 +134,8 @@ private:
 	Font font2 { FindFile("DroidSans.ttf"), 11 };
 
 	Text text_worldname { renderer, world_font, "..." };
-	Text text_particle_count { renderer, font2, "" };
+	Text text_help1 { renderer, font2, "" };
+	Text text_help2 { renderer, font2, "" };
 	Text text_fps { renderer, font2, "" };
 
 	Text text_inv_coins { renderer, font2, "" };

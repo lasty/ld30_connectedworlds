@@ -48,4 +48,7 @@ void SetTintColour(sdl::Texture &texture, colour col);
 void SetDrawColour(sdl::Renderer &renderer, colour col);
 
 
+std::string FormatMoney(int coins);
+
+
 #endif // UTILS_H
