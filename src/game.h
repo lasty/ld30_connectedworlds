@@ -217,6 +217,7 @@ public:
 	// Gets called once per frame with the time since last frame in seconds
 	void Update(float dt)
 	{
+		world_mouse_pos = ScreenToWorld(mouse_pos);
 
 		UpdateObjects(dt);
 

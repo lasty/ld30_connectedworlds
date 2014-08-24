@@ -27,6 +27,9 @@ public:
 
 		static int id_stat = 0;
 		id = id_stat++;
+
+		if (id == 0) tint_colour = colour::blue;
+		if (id == 1) tint_colour = colour::red;
 	}
 
 	int id = -1;
@@ -41,6 +44,8 @@ public:
 	float rot_speed = 720.0f;
 
 	//bool running = false;
+	float walk_timer_legs = 0.0f;
+	float walk_timer_arms = 0.0f;
 
 	void SetMoveDirection(float x, float y)
 	{
@@ -121,9 +126,20 @@ public:
 			glm::vec2 thrustvec = glm::normalize(control_stick) * thrust_speed * dt;
 
 			velocity += thrustvec;
+
+			walk_timer_legs += dt * 7.0f;
+			walk_timer_arms += dt * 7.1f;;
 		}
 		else
 		{
+			/*float vel = glm::length(velocity);
+			walk_timer_legs = vel;
+			walk_timer_arms = vel;
+			*/
+			walk_timer_legs = 0.0f;
+			walk_timer_arms = 0.0f;
+
+
 			apply_friction = true;
 		}
 

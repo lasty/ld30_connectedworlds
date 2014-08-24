@@ -45,6 +45,48 @@ void EntityRenderer::RenderEntity(const Entity &e, const Camera &cam) const
 	}
 }
 
+#include <glm/glm.hpp>
+#include <iostream>
+
+void EntityRenderer::RenderEntity(const Player &p, const Camera &cam) const
+{
+	glm::vec2 worldpos = p.GetWorldPos();
+	worldpos -= cam.GetOffset();
+
+	//this is good enough for now.. needs more tweaking though
+
+	float legs_time = p.walk_timer_legs;
+	float arm_time = p.walk_timer_arms;
+
+	float lsine = fabs(glm::sin(legs_time));
+	float asine = fabs(glm::sin(arm_time));
+
+	lsine = glm::clamp(lsine, 0.0f, 1.0f);
+	asine = glm::clamp(asine, 0.0f, 1.0f);
+
+	int index_arms = glm::mix<float>(0, arms_max, asine);
+	int index_legs = glm::mix<float>(0, legs_max, lsine);
+
+	//std::cout << "index_arms = " << index_arms << std::endl;
+
+	if (index_arms < 0 or index_arms > arms_max) { std::cout << "index_arms out of range: " << index_arms << std::endl; }
+	if (index_legs < 0 or index_legs > legs_max) { std::cout << "index_legs out of range: " << index_legs << std::endl; }
+
+	index_arms = glm::clamp(index_arms, 0, arms_max);
+	index_legs = glm::clamp(index_legs, 0, legs_max);
+
+	auto & arms = player_arms.at(index_arms);
+
+	auto & legs = player_legs.at(index_legs);
+
+
+	legs.Render(worldpos.x, worldpos.y, p.heading);
+
+	arms.Render(worldpos.x, worldpos.y, p.heading);
+
+	player_head.Render(worldpos.x, worldpos.y, p.heading);
+}
+
 
 void EntityRenderer::SetupCircle()
 {

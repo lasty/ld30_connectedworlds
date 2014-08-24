@@ -22,11 +22,22 @@ enum class tile
 
 enum class colour
 {
+	//default
 	white,
+
+	//
 	grey,
+
+	//coins
 	silver,
 	copper,
-	gold
+	gold,
+
+	// player colours
+	blue,
+	red
+
+
 };
 
 bool CanCollide(const tile &td);

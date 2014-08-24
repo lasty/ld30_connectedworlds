@@ -102,12 +102,13 @@ std::vector<glm::ivec4> colourmap =
 	//, glm::ivec4{ 0xfd, 0xde, 0x6c, 0xff} // pale gold
 	//, glm::ivec4{ 0xb5, 0x94, 0x10, 0xff} //dark gold
 
+	, glm::ivec4{ 0x3b, 0x5b, 0x92 , 0xff} // denim blue
+
+	, glm::ivec4{ 0x98, 0x00, 0x02, 0xff} // blood red
+
 	};
 
 /*  //template for inserting new ones
-
-, glm::ivec4{
-, 0xff} //
 
 
 , glm::ivec4{
