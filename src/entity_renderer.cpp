@@ -80,11 +80,17 @@ void EntityRenderer::RenderEntity(const Player &p, const Camera &cam) const
 	auto & legs = player_legs.at(index_legs);
 
 
+
+	SetTintColour(legs.GetTexture(), p.tint_colour);
 	legs.Render(worldpos.x, worldpos.y, p.heading);
 
+	SetTintColour(arms.GetTexture(), colour::white);
 	arms.Render(worldpos.x, worldpos.y, p.heading);
 
+
+	//SetTintColour(legs.GetTexture(), p.tint_colour);
 	player_head.Render(worldpos.x, worldpos.y, p.heading);
+	//SetTintColour(arms.GetTexture(), colour::white);
 }
 
 
