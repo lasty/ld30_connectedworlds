@@ -99,7 +99,7 @@ public:
 
 
 	GameApp()
-	: App("LD 30 - Connected Worlds", windowwidth, windowheight)
+	: App("LD 30 - Starving Symbiosis  (Connected Worlds)", windowwidth, windowheight)
 	{
 		//initialize the map with enough items
 		//map.insert(map.begin(), (mapwidth*mapheight), false);
