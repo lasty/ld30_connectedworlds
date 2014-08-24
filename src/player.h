@@ -13,6 +13,8 @@
 #include <glm/geometric.hpp>
 
 
+class World;
+
 #include <iostream>
 
 class Player : public Entity
@@ -245,6 +247,11 @@ public:
 
 	Inventory & GetInventory() { return inv; }
 	const Inventory & GetInventory() const { return inv; }
+
+	void Use();
+
+	void Throw();
+
 };
 
 

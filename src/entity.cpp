@@ -68,6 +68,10 @@ void Entity::Update(float dt)
 			}
 		}
 	}
+
+	cooldown -= dt;
+
+	draw_circle = (cooldown > 0.0f);
 }
 
 
@@ -161,6 +165,21 @@ bool Entity::HasCollision(float x, float y, float width, float height) const
 	return distanceSquared < radiusSquared;
 }
 
+void Entity::Shoot(glm::vec2 from, glm::vec2 to, float speed)
+{
+	position = from;
+
+	if (from == to)  //weirdness happening here if i dont check this
+	{
+		velocity = {0.0f, 0.0f};
+	}
+	else
+	{
+		velocity = glm::normalize(to - from) * speed;
+	}
+
+	SetCooldown();
+}
 
 void Entity::DispatchPickup(Player &player)
 {

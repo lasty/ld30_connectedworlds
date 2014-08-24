@@ -27,10 +27,6 @@ public:
 	, name_text(rend, font, "Empty")
 	, count_text(rend, font, "x 0")
 	{
-		std::stringstream ss;
-		ss << "[" << id+1 << "]";
-		num_text.SetText(ss.str());
-
 		yoffset = (5-id) * -40;
 		yoffset -= 40;
 		xoffset = 10;
@@ -48,6 +44,8 @@ public:
 	Font &font;
 	int id;
 
+	int count = 0;
+
 	int yoffset = 0;
 	int xoffset = 0;
 
@@ -57,18 +55,35 @@ public:
 
 	void SetInventorySlot(Inventory &inv)
 	{
+		{
+			std::stringstream ss;
+			if (inv.GetSelectedSlot() == id)
+			{
+				ss << "[" << id+1 << "]";
+			}
+			else
+			{
+				ss << " " << id+1 << " ";
+			}
+			num_text.SetText(ss.str());
+		}
+
 		name_text.SetText(GetNameForEntity(inv.slots[id]));
 
+		count = inv.slots_count[id];
 		std::stringstream ss;
-		ss << "x " << inv.slots_count[id];
+		ss << "x " << count;
 		count_text.SetText(ss.str());
 	}
 
 	void Render() const
 	{
 		num_text.Render(renderer, xoffset, yoffset);
-		name_text.Render(renderer, xoffset + 40, yoffset);
-		count_text.Render(renderer, xoffset + 200, yoffset);
+		if (count)
+		{
+			name_text.Render(renderer, xoffset + 40, yoffset);
+			count_text.Render(renderer, xoffset + 200, yoffset);
+		}
 	}
 
 };

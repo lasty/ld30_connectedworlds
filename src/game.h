@@ -252,22 +252,27 @@ public:
 			else if (e.keysym.sym == SDLK_1)
 			{
 				sounds.Beep();
+				GetPlayer().GetInventory().ChangeSlot(0);
 			}
 			else if (e.keysym.sym == SDLK_2)
 			{
-				sounds.Explosion();
+				sounds.Beep();
+				GetPlayer().GetInventory().ChangeSlot(1);
 			}
 			else if (e.keysym.sym == SDLK_3)
 			{
-				sounds.Hit();
+				sounds.Beep();
+				GetPlayer().GetInventory().ChangeSlot(2);
 			}
 			else if (e.keysym.sym == SDLK_4)
 			{
-				sounds.Laser();
+				sounds.Beep();
+				GetPlayer().GetInventory().ChangeSlot(3);
 			}
 			else if (e.keysym.sym == SDLK_5)
 			{
-				sounds.Pickup();
+				sounds.Beep();
+				GetPlayer().GetInventory().ChangeSlot(4);
 			}
 
 			else if (e.keysym.sym == SDLK_F1)
@@ -314,6 +319,30 @@ public:
 		Debug_Circle(world_mouse_pos.x, world_mouse_pos.y, 20);
 	}
 
+	void OnMouseButton(int x, int y, int button, bool down) override
+	{
+		//std::cout << "button " << button << " down " << down << std::endl;
+
+		mouse_pos.x = x;
+		mouse_pos.y = y;
+
+		world_mouse_pos = ScreenToWorld(mouse_pos);
+
+		// TODO HUD culling
+
+		if (down)
+		{
+			if (button == 1)
+			{
+				GetPlayer().Use();
+			}
+
+			if (button == 3)
+			{
+				GetPlayer().Throw();
+			}
+		}
+	}
 
 	glm::vec2 ScreenToWorld(glm::vec2 p) const
 	{

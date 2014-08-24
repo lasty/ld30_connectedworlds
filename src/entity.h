@@ -27,10 +27,12 @@ public:
 	float heading = 0.0f;
 	float delta_heading = 0.0f;
 
-	bool apply_friction = false;
-	float friction = 0.0f;  //simulate friction
+	bool apply_friction = true;
+	float friction = 500.0f;  //simulate friction
 	float ttl=0.0f; //time to live (for particle effects)
 	float radius = 32.0f;
+
+	float cooldown = 0.5f;
 
 	bool draw_circle = false;
 
@@ -58,6 +60,10 @@ public:
 
 	bool DrawCircle() const { return draw_circle; }
 
+	void SetCooldown(float c = 0.5f) { cooldown = c; }
+	bool CanBePickedUp() const { return cooldown <= 0.0f; }
+
+	void Shoot(glm::vec2 from, glm::vec2 to, float speed);
 
 	virtual void DispatchPickup(Player &player);
 

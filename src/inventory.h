@@ -7,7 +7,7 @@
 #include "items.h"
 
 #include <memory>
-
+#include <iostream>
 
 class Inventory
 {
@@ -19,6 +19,8 @@ class Inventory
 	std::vector<ent> slots;
 	std::vector<int> slots_count;
 	int max_slots = 5;
+
+	int selected_slot = 0;
 
 	Inventory()
 	{
@@ -61,6 +63,9 @@ class Inventory
 
 		if (HasEmptySlot())
 		{
+			//prefer to use the selected slot to fill up
+			if (slots[selected_slot] == ent::none) return selected_slot;
+
 			for(int i=0; i< max_slots; i++)
 			{
 				if (slots[i] == ent::none) return i;
@@ -107,7 +112,7 @@ class Inventory
 	}
 
 
-	std::shared_ptr<Entity> Pop()
+	std::shared_ptr<Entity> PopBack()
 	{
 		std::shared_ptr<Entity> ent;
 
@@ -116,6 +121,33 @@ class Inventory
 			ent = items.back();
 			items.pop_back();
 			DecSlot(*ent);
+		}
+
+		return std::move(ent);
+	}
+
+	std::shared_ptr<Entity> PopFromSlot()
+	{
+		return PopFromSlot(selected_slot);
+	}
+
+	std::shared_ptr<Entity> PopFromSlot(int slot)
+	{
+		ent looking_for = slots[slot];
+
+		//std::cout << "PopFromSlot(" << slot << ") = " << GetNameForEntity(looking_for) << std::endl;
+
+		std::shared_ptr<Entity> ent;
+
+		for(int i=0; i< items.size(); i++)
+		{
+			if (items[i]->entitydef == looking_for)
+			{
+				ent = std::move(items[i]);
+				items.erase(items.begin() + i);
+				DecSlot(*ent);
+				break;
+			}
 		}
 
 		return std::move(ent);
@@ -143,6 +175,13 @@ class Inventory
 
 		return tally;
 	}
+
+	void ChangeSlot(int i)
+	{
+		selected_slot = i;
+	}
+
+	int GetSelectedSlot() const { return selected_slot; }
 
 };
 

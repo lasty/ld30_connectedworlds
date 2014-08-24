@@ -89,6 +89,32 @@ public:
 		//std::cout << "Laser " << i << std::endl;
 	}
 
+	void ErrorBeep()
+	{
+		//TODO make some sounds
+		Laser();
+	}
+
+	void UseItem()
+	{
+		//TODO make some sounds
+		Powerup();
+	}
+
+	void ThrowItem()
+	{
+		//TODO make some sounds
+		Hit();
+	}
+
+	void Powerup()
+	{
+		int i = random_int(1, 2);
+		if (i==1) mixer.PlaySound(powerup1);
+		else mixer.PlaySound(powerup2);
+
+		//std::cout << "Powerup " << i << std::endl;
+	}
 
 	void Pickup()
 	{

@@ -34,8 +34,12 @@ struct MapPos
 
 class World
 {
+protected:
 	Generator &gen;
+
+public:
 	SoundManager &sounds;
+
 public:
 	World(Generator &gen, SoundManager &soundmanager)
 	:gen(gen)
@@ -146,8 +150,7 @@ public:
 
 	void SpawnEntity(std::shared_ptr<Entity> e)
 	{
-		//TODO use std::move
-		spawn_list.push_back(e);
+		spawn_list.push_back(std::move(e));
 	}
 
 	void SpawnEntity(const std::string what, int x, int y, int data = 0)
@@ -214,7 +217,7 @@ public:
 			if (player.HasCollision(*e))
 			{
 
-				if (player.CanPickup(e))
+				if (e->CanBePickedUp() and player.CanPickup(e))
 				{
 					player.Pickup(std::move(e));
 					sounds.Pickup();
