@@ -21,13 +21,13 @@ class Player;
 class InventorySlot
 {
 public:
-	InventorySlot(sdl::Renderer &rend, Font &font, int slot_id)
+	InventorySlot(sdl::Renderer &rend, Font &font1, Font &font2, Font &font3, int slot_id)
 	: renderer(rend), font(font), id(slot_id)
-	, num_text(rend, font, "1")
-	, name_text(rend, font, "Empty")
-	, count_text(rend, font, "x 0")
+	, num_text(rend, font1, "1")
+	, name_text(rend, font2, "Empty")
+	, count_text(rend, font3, "x 0")
 	{
-		yoffset = (5-id) * -40;
+		yoffset = (5-id) * -50;
 		yoffset -= 40;
 		xoffset = 10;
 
@@ -36,8 +36,8 @@ public:
 		count_text.shadow = true;
 
 		num_text.box = true;
-		name_text.box = true;
-		count_text.box = true;
+		//name_text.box = true;
+		//count_text.box = true;
 	}
 
 	sdl::Renderer &renderer;
@@ -59,11 +59,11 @@ public:
 			std::stringstream ss;
 			if (inv.GetSelectedSlot() == id)
 			{
-				ss << "[" << id+1 << "]";
+				ss << "[" << id+1 << "                 ]";
 			}
 			else
 			{
-				ss << " " << id+1 << " ";
+				ss << " " << id+1;// << " ";
 			}
 			num_text.SetText(ss.str());
 		}
@@ -73,6 +73,7 @@ public:
 		count = inv.slots_count[id];
 		std::stringstream ss;
 		ss << "x " << count;
+		//ss << count << " x ";
 		count_text.SetText(ss.str());
 	}
 
@@ -81,8 +82,8 @@ public:
 		num_text.Render(renderer, xoffset, yoffset);
 		if (count)
 		{
-			name_text.Render(renderer, xoffset + 40, yoffset);
-			count_text.Render(renderer, xoffset + 200, yoffset);
+			count_text.Render(renderer, xoffset + 30, yoffset - 2);
+			name_text.Render(renderer, xoffset + 30, yoffset - 14);
 		}
 	}
 
@@ -118,7 +119,7 @@ public:
 		inv_slots.reserve(5);
 		for (int i=0; i<5; i++)
 		{
-			inv_slots.emplace_back(renderer, font1, i);
+			inv_slots.emplace_back(renderer, font1, tiny_font, tiny_font, i);
 		}
 
 	}
@@ -132,6 +133,9 @@ private:
 
 	Font font1 { FindFile("DroidSans.ttf"), 16 };
 	Font font2 { FindFile("DroidSans.ttf"), 11 };
+
+	Font bold_font { FindFile("RobotoSlab-Bold.ttf"), 24 };
+	Font tiny_font { FindFile("DroidSans.ttf"), 9 };
 
 	Text text_worldname { renderer, world_font, "..." };
 	Text text_help1 { renderer, font2, "" };
@@ -162,8 +166,11 @@ public:
 	void Debug_Rectangle(int x, int y, int w, int h);
 	void Debug_Circle(int x, int y, int radius);
 
-	Font & GetFont1() { return font1; }
-	Font & GetFont2() { return font2; }
+	Font & GetFont_small() { return tiny_font; }
+	Font & GetFont_medium() { return font2; }
+	Font & GetFont_large() { return font1; }
+	Font & GetFont_big() { return bold_font; }
+
 private:
 	mutable float debug_delay = 0.0f;
 	mutable std::vector<SDL_Rect> debug_rects;

@@ -106,7 +106,7 @@ public:
 		{
 			glm::vec2 pos = position - cam.GetOffset();
 			pos.x -= big_text->GetWidth() / 2;
-			pos.y -= 50;
+			pos.y -= 70;
 
 			big_text->Render(pos.x, pos.y);
 		}
@@ -115,7 +115,7 @@ public:
 		{
 			glm::vec2 pos = position - cam.GetOffset();
 			pos.x -= msg_text->GetWidth() / 2;
-			pos.y -= 20;
+			pos.y -= 30;
 
 
 			msg_text->Render(pos.x, pos.y);

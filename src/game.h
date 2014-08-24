@@ -140,8 +140,8 @@ public:
 
 	void SetShopText(ThingsWithInventory &shop)
 	{
-		shop.text_above.reset( new Text(renderer, hud.GetFont1(), "toptext") );
-		shop.text_below.reset( new Text(renderer, hud.GetFont2(), "bottext") );
+		shop.text_above.reset( new Text(renderer, hud.GetFont_large(), "toptext") );
+		shop.text_below.reset( new Text(renderer, hud.GetFont_medium(), "bottext") );
 		shop.text_above->box = true;
 		shop.text_above->shadow = true;
 		shop.text_below->box = true;
@@ -151,8 +151,8 @@ public:
 
 	void SetPlayerText(Player &player)
 	{
-		player.big_text.reset( new Text(renderer, hud.GetFont1(), "") );
-		player.msg_text.reset( new Text(renderer, hud.GetFont2(), "") );
+		player.big_text.reset( new Text(renderer, hud.GetFont_big(), "") );
+		player.msg_text.reset( new Text(renderer, hud.GetFont_medium(), "") );
 
 		//player.big_text->box = true;
 		player.big_text->shadow = true;
