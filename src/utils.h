@@ -37,4 +37,15 @@ void Debug_Rectangle(int x1, int y1, int w, int h);
 void Debug_Circle(int x, int y, int radius);
 
 
+#include <glm/vec4.hpp>
+#include "gamedefs.h"
+
+namespace sdl{ class Texture;  class Renderer; }
+
+
+const glm::ivec4 & GetColour(colour col);
+void SetTintColour(sdl::Texture &texture, colour col);
+void SetDrawColour(sdl::Renderer &renderer, colour col);
+
+
 #endif // UTILS_H

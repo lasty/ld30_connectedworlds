@@ -31,6 +31,8 @@ public:
 
 	int id = -1;
 
+	int coins = 0;
+
 	glm::vec2 control_stick;
 	glm::vec2 look_at;
 	float current_speed = 0.0f;
@@ -141,6 +143,22 @@ public:
 		}
 
 		Entity::Update(dt);
+	}
+
+	void Pickup(Entity &e)
+	{
+		//Double Dispatch pattern
+		e.DispatchPickup(*this);
+	}
+
+	void Pickup(Coin &c)
+	{
+		coins += c.coin_value;
+	}
+
+	int GetNumCoins() const
+	{
+		return coins;
 	}
 
 };

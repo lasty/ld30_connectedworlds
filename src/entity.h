@@ -8,6 +8,7 @@
 
 class World;
 
+class Player;
 
 class Entity
 {
@@ -31,7 +32,10 @@ public:
 	float ttl=0.0f; //time to live (for particle effects)
 	float radius = 32.0f;
 
-	bool draw_circle = true;
+	bool draw_circle = false;
+
+	colour tint_colour = colour::white;
+
 private:
 	bool alive = true;
 
@@ -41,6 +45,7 @@ public:
 	void Update(float dt);
 
 	void Kill();
+	bool StillAlive() const { return alive; }
 
 	bool HasCollision(const Entity &other) const;
 	bool HasCollision(float x1, float x2, float y1, float y2) const;
@@ -52,6 +57,9 @@ public:
 	const glm::vec2 & GetWorldPos() const { return position; }
 
 	bool DrawCircle() const { return draw_circle; }
+
+
+	virtual void DispatchPickup(Player &player);
 
 };
 

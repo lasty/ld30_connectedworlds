@@ -10,7 +10,7 @@
 
 // Sprite class, which rotates around a midpoint
 
-class Sprite : private Tile
+class Sprite : public Tile
 {
 public:
 	Sprite(sdl::Renderer &renderer, sdl::Texture &texref, SDL_Rect coords, SDL_Point midpoint);

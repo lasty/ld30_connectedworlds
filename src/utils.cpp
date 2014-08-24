@@ -80,3 +80,59 @@ void Debug_Circle(int x, int y, int radius)
 	if (debug_hud) { debug_hud -> Debug_Circle(x, y, radius); }
 }
 
+
+////////////////////////////////////////////////////////////////////////////////
+
+// Some colours taken from  http://xkcd.com/color/rgb/  (Internet survey)
+
+std::vector<glm::ivec4> colourmap =
+	{ glm::ivec4{ 0xff, 0xff, 0xff, 0xff} //white
+
+	, glm::ivec4{ 0xaa, 0xaa, 0xaa, 0xff} //grey
+
+	, glm::ivec4{ 0xc5, 0xc9, 0xc7, 0xff} //silver
+
+	, glm::ivec4{ 0xb6, 0x63, 0x25, 0xff} //copper
+
+	//Too many golds to choose from...
+	//, glm::ivec4{ 0xfa, 0xc2, 0x05, 0xff} //goldenrod
+	//, glm::ivec4{ 0xdb, 0xb4, 0x0c, 0xff} //gold
+	//, glm::ivec4{ 0xfc, 0xc0, 0x06, 0xff} //marigold
+	, glm::ivec4{ 0xfd, 0xdc, 0x5c, 0xff} //light gold
+	//, glm::ivec4{ 0xfd, 0xde, 0x6c, 0xff} // pale gold
+	//, glm::ivec4{ 0xb5, 0x94, 0x10, 0xff} //dark gold
+
+	};
+
+/*  //template for inserting new ones
+
+, glm::ivec4{
+, 0xff} //
+
+
+, glm::ivec4{
+, 0xff} //
+
+*/
+
+const glm::ivec4 & GetColour(colour col)
+{
+	return colourmap.at((int)col);
+}
+
+void SetTintColour(sdl::Texture &texture, colour tint)
+{
+	const glm::ivec4 &col = GetColour(tint);
+
+	SDL_SetTextureColorMod(texture.GetTexture(), col.r, col.g, col.b);
+	SDL_SetTextureAlphaMod(texture.GetTexture(), col.a);
+}
+
+void SetDrawColour(sdl::Renderer &renderer, colour tint)
+{
+	const glm::ivec4 &col = GetColour(tint);
+
+	SDL_SetRenderDrawColor(renderer.GetRenderer(), col.r, col.g, col.b, col.a);
+}
+
+

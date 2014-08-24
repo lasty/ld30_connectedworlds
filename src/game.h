@@ -59,8 +59,8 @@ public:
 	OverworldGenerator gen_over;
 	UnderworldGenerator gen_under;
 
-	World overworld { gen_over };
-	World underworld { gen_under };
+	World overworld { gen_over, sounds };
+	World underworld { gen_under, sounds };
 
 
 	int whichworld = 1;  //1 = overworld, 0 = underworld
@@ -268,6 +268,10 @@ public:
 				sounds.Pickup();
 			}
 
+			else if (e.keysym.sym == SDLK_F1)
+			{
+				hud.debug = not hud.debug;
+			}
 		}
 
 		auto k = e.keysym.sym;

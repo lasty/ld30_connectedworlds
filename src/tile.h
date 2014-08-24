@@ -21,6 +21,8 @@ protected:
 
 public:
 	void Render(int x, int y) const;
+
+	sdl::Texture & GetTexture() const { return tex; }
 };
 
 

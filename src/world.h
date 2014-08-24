@@ -2,24 +2,23 @@
 #define WORLD_H
 
 
-#include <vector>
-#include <map>
-#include <stdexcept>
-#include <iostream>
-#include <algorithm>
-
-#include <glm/vec2.hpp>
-
 #include "gamedefs.h"
 
 #include "entity.h"
 #include "items.h"
 #include "player.h"
-
-
 #include "maptile.h"
-
 #include "generators.h"
+#include "sound_manager.h"
+
+#include <vector>
+#include <map>
+#include <stdexcept>
+#include <iostream>
+#include <algorithm>
+#include <memory>
+
+#include <glm/vec2.hpp>
 
 
 struct MapPos
@@ -36,9 +35,11 @@ struct MapPos
 class World
 {
 	Generator &gen;
+	SoundManager &sounds;
 public:
-	World(Generator &gen)
+	World(Generator &gen, SoundManager &soundmanager)
 	:gen(gen)
+	,sounds(soundmanager)
 	{
 		NewWorld();
 	}
@@ -51,6 +52,8 @@ public:
 		//ExpandTerrain(0, 0, 5, 5, gen);
 		world_name = gen.GetName();
 
+		AddCoins(100);
+
 		std::cout << "New world '" << world_name << "' mapsize is " << terrain.size() << std::endl;
 	}
 
@@ -59,7 +62,10 @@ public:
 
 	std::map<MapPos, MapTile> terrain;
 
-	std::vector<Entity> entities;
+	std::vector<std::shared_ptr<Entity>> entities;
+	std::vector<std::shared_ptr<Entity>> spawn_list;
+	using EntityListConst = std::vector<const Entity*>;
+
 
 	Player player { *this };
 
@@ -136,43 +142,57 @@ public:
 	float random_map_width() { return (random_float(-20.0f, 20.0f) ) * 64.0f; }
 	float random_map_height() { return (random_float(-20.0f, 20.0f) ) * 64.0f; }
 
-	void AddEntity(const Entity& e)
+
+	void SpawnEntity(std::shared_ptr<Entity> e)
 	{
-		entities.push_back(e);
+		//TODO use std::move
+		spawn_list.push_back(e);
+	}
+
+	void SpawnEntity(const std::string what, int x, int y, int data = 0)
+	{
+		if (what == "coin")
+		{
+			int cointype = random_int(0, 2);
+			SpawnEntity(std::make_shared<Coin>(x, y, cointype));
+		}
+		else
+		{
+			std::cout << "SpawnEntity:  Unknown Entity '" << what << "'" << std::endl;
+		}
 	}
 
 	void AddCoins(int numcoins=1)
 	{
 		for(int i=0; i<numcoins; i++)
 		{
-			Coin e { random_map_width(), random_map_height(), random_rotation() };
-
-			AddEntity(e);
+			SpawnEntity("coin", random_map_width(), random_map_height());
 		}
 	}
 
 	void UpdateObjects(float dt)
 	{
 
-		int new_coins = 0;
-/*
-		for(auto &c : coins)
+		for(auto &e : entities)
 		{
-			c.Update(dt);
-			if (player.HasCollision(c))
+			e->Update(dt);
+
+			if (player.HasCollision(*e))
 			{
-				c.Kill();
-				mixer.PlaySound(sound2);
-				coins_score++;
-				new_coins++;
+				e->DispatchPickup(player);
+
+				e->Kill();
+				sounds.Pickup();
+				//coins_score++;
+				AddCoins(1);
 			}
 		}
-*/
+
 
 		// lambda function to test whether we should remove this particle
-		//const auto not_alive = [](Particle &p) { return not p.alive; };
+		const auto not_alive = [](std::shared_ptr<Entity> &e) { return not e->StillAlive(); };
 
-		// Remove any dead particles/coins...
+		// Remove any dead entities...
 		//
 		// If you haven't seen this pattern before it can be confusing.
 		// "remove_if" partitions the vector with a predicate function.
@@ -181,32 +201,31 @@ public:
 		// actually remove the requested items (if any).
 		//
 
-/*
-		auto partition = std::remove_if(particles.begin(), particles.end(), not_alive);
-		particles.erase(partition, particles.end());
-*/
+		auto partition = std::remove_if(entities.begin(), entities.end(), not_alive);
+		entities.erase(partition, entities.end());
 
-		// Repeat for coins
 
-/*
-		auto partition2 = std::remove_if(coins.begin(), coins.end(), not_alive);
-		coins.erase(partition2, coins.end());
-*/
+		// Add any new entities here.  We can't do this inside the loop above.
 
-		// Add any new coins here.  We can't do this inside the loops above.
-		AddCoins(new_coins);
+		for (auto &e : spawn_list)
+		{
+			//TODO use std::move?
+			entities.push_back(e);
+		}
+		spawn_list.clear();
+
 	}
 
 
-	std::vector<const Entity*> GetEntitiesInRange(const glm::vec2 &topleft, const glm::vec2 &size) const
+	EntityListConst GetEntitiesInRange(const glm::vec2 &topleft, const glm::vec2 &size) const
 	{
-		std::vector<const Entity*> list;
+		EntityListConst list;
 
-		for(const Entity& e : entities)
+		for(const auto& e : entities)
 		{
-			if (e.HasCollision(topleft.x, topleft.y, size.x, size.y))
+			if (e->HasCollision(topleft.x, topleft.y, size.x, size.y))
 			{
-				list.push_back(&e);
+				list.push_back(e.get());
 			}
 		}
 

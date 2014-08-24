@@ -13,6 +13,7 @@
 
 class GameApp;
 class Camera;
+class Player;
 
 class HUD
 {
@@ -38,7 +39,7 @@ public:
 
 	~HUD() { SetHUD(nullptr); }
 
-	bool debug = true;
+	bool debug = false;
 
 private:
 	Font world_font { FindFile("RobotoSlab-Bold.ttf"), 32 };
@@ -53,6 +54,8 @@ private:
 
 public:
 	void UpdateHUD(float dt);
+
+	void SetInventory(Player &player);
 
 	void SetFPS(int fps);
 

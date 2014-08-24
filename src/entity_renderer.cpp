@@ -9,8 +9,10 @@
 #include "gamedefs.h"
 #include "world.h"
 #include "player.h"
-
+#include "entity.h"
 #include "camera.h"
+
+#include "utils.h"
 
 #include <glm/vec2.hpp>
 
@@ -18,7 +20,7 @@
 void EntityRenderer::RenderEntities(const World & world, const Camera &cam) const
 {
 	//culling
-	std::vector<const Entity*> list = world.GetEntitiesInRange(cam.GetTopLeft(), cam.GetSize());
+	World::EntityListConst list = world.GetEntitiesInRange(cam.GetTopLeft(), cam.GetSize());
 
 	for(const Entity * e : list)
 	{
@@ -33,6 +35,7 @@ void EntityRenderer::RenderEntity(const Entity &e, const Camera &cam) const
 
 	const Sprite& sprite = GetSpriteForEntity(e);
 
+	SetTintColour(sprite.GetTexture(), e.tint_colour);
 	sprite.Render(worldpos.x, worldpos.y, e.heading);
 
 	if (e.DrawCircle())
@@ -91,5 +94,4 @@ const Sprite & EntityRenderer::GetSpriteForEntity(const Entity &e) const
 			return none_sprite;
 	}
 }
-
 

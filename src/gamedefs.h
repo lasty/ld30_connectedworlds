@@ -20,6 +20,14 @@ enum class tile
 	ore
 };
 
+enum class colour
+{
+	white,
+	grey,
+	silver,
+	copper,
+	gold
+};
 
 bool CanCollide(const tile &td);
 

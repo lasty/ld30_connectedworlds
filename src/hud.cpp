@@ -7,17 +7,17 @@
 #include "font/text.h"
 
 #include "camera.h"
+#include "player.h"
 
 #include "sdl/headers.h"
 
+#include <iomanip>
+
 void HUD::UpdateHUD(float dt)
 {
-	//if (debug) { Debug_Clear(); }
 	debug_delay -= dt;
 
-	std::ostringstream cc;
-	cc << "Coins: " << game.coins_score;;
-	text_count.SetText(cc.str());
+	SetInventory(game.GetPlayer());
 
 	std::ostringstream pc;
 	pc << "Arrows/WASD: Move.  Tab: Switch worlds.  Space: More coins.  ESC: Quit.  ";
@@ -25,6 +25,15 @@ void HUD::UpdateHUD(float dt)
 	text_particle_count.SetText(pc.str());
 }
 
+void HUD::SetInventory(Player &player)
+{
+	std::ostringstream cc;
+	int dollars = player.GetNumCoins() / 100;
+	int cents = player.GetNumCoins() % 100;
+	cc << "Coins: $" << dollars <<".";
+	cc << std::setw(2) << std::setfill('0');  cc<<cents;
+	text_count.SetText(cc.str());
+}
 
 void HUD::SetFPS(int fps)
 {
@@ -71,6 +80,7 @@ void HUD::Debug_Clear() const
 
 void HUD::Debug_Rectangle(int x, int y, int w, int h)
 {
+	if (not debug) return;
 	//std::cout << "Rectangle ("<<x<< ", "<<y<<", "<<w<<", "<<h<<")" << std::endl;
 	SDL_Rect r{x, y, w, h};
 	debug_rects.push_back(r);
@@ -79,6 +89,7 @@ void HUD::Debug_Rectangle(int x, int y, int w, int h)
 
 void HUD::Debug_Circle(int x, int y, int radius)
 {
+	if (not debug) return;
 	SDL_Rect r{x, y, radius, 0};
 	debug_circles.push_back(r);
 }
@@ -103,6 +114,8 @@ void RenderCircle(const sdl::Renderer &renderer, int x, int y, int radius)
 
 void HUD::RenderDebug(const Camera &cam) const
 {
+	if (not debug) return;
+
 	SDL_SetRenderDrawColor(renderer.GetRenderer(), 0x22, 0xee, 0xbb, 0xff);
 
 	glm::vec2 offset = cam.GetOffset();

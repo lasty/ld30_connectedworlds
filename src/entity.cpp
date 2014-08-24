@@ -15,10 +15,27 @@ void Entity::Update(float dt)
 	{
 		auto old_position = position;
 		position += velocity * dt;
+
+
 		if (HasCollision(*world))
 		{
 			position = old_position;
-			velocity*= -0.2;
+
+			//try vertical or horizontal only
+
+			position += glm::vec2{velocity.x, 0.0f} * dt;
+			if (HasCollision(*world))
+			{
+				position = old_position;
+				position += glm::vec2{0.0f, velocity.y} * dt;
+
+				if (HasCollision(*world))
+				{
+					position = old_position;
+
+					velocity*= -0.2;
+				}
+			}
 		}
 	}
 	else
@@ -144,4 +161,9 @@ bool Entity::HasCollision(float x, float y, float width, float height) const
 	return distanceSquared < radiusSquared;
 }
 
+
+void Entity::DispatchPickup(Player &player)
+{
+	std::cout << "Calling base DispatchPickup(&player)... override this!" << std::endl;
+}
 
