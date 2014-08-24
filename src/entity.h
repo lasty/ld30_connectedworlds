@@ -31,6 +31,7 @@ public:
 	float ttl=0.0f; //time to live (for particle effects)
 	float radius = 32.0f;
 
+	bool draw_circle = true;
 private:
 	bool alive = true;
 
@@ -49,6 +50,9 @@ public:
 	//bool HasCollision(const std::vector<Entity> &entities) const;
 
 	const glm::vec2 & GetWorldPos() const { return position; }
+
+	bool DrawCircle() const { return draw_circle; }
+
 };
 
 

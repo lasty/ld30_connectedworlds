@@ -5,6 +5,8 @@
 #include "sdl/texture.h"
 #include "tile.h"
 
+#include "camera.h"
+
 #include "gamedefs.h"
 
 
@@ -31,15 +33,28 @@ private:
 
 
 public:
-	void RenderMap(const World & world) const
+	void RenderMap(const World & world, const Camera &cam) const
 	{
-		for (int x=0; x<mapwidth; x++)
+		glm::vec2 offset = cam.GetOffset();
+		glm::vec2 tl = cam.GetTopLeft();
+		glm::vec2 br = cam.GetBottomRight();
+
+		tl /= 64.0f;
+		br /= 64.0f;
+
+		// adjust slightly, or else we get blanks
+		tl -= 1.0f;
+		//br -= 0.5f;
+
+		for (int x=tl.x; x<br.x; x++)
 		{
-			for (int y=0; y<mapheight; y++)
+			for (int y=tl.y; y<br.y; y++)
 			{
 				const MapTile & mt = world.GetXY(x,y);
 
 				glm::vec2 worldpos = world.GetWorldPos(x, y);
+
+				worldpos -= offset;
 
 				const Tile &tile = GetTileRender(mt);
 

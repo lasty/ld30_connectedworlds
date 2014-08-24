@@ -12,7 +12,7 @@
 #include <vector>
 
 class GameApp;
-
+class Camera;
 
 class HUD
 {
@@ -58,18 +58,19 @@ public:
 
 	void SetWorldName();
 
-	void RenderHUD() const;
+	void RenderHUD(const Camera &cam) const;
 
-	void RenderDebug() const;
+	void RenderDebug(const Camera &cam) const;
 
-	void Debug_Clear();
+	void Debug_Clear() const; //not really const
 
 	void Debug_Rectangle(int x, int y, int w, int h);
 	void Debug_Circle(int x, int y, int radius);
 
 private:
-	std::vector<SDL_Rect> debug_rects;
-	std::vector<SDL_Rect> debug_circles;
+	mutable float debug_delay = 0.0f;
+	mutable std::vector<SDL_Rect> debug_rects;
+	mutable std::vector<SDL_Rect> debug_circles;
 
 };
 

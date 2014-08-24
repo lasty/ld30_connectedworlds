@@ -6,11 +6,14 @@
 #include "font/font.h"
 #include "font/text.h"
 
+#include "camera.h"
+
 #include "sdl/headers.h"
 
 void HUD::UpdateHUD(float dt)
 {
 	//if (debug) { Debug_Clear(); }
+	debug_delay -= dt;
 
 	std::ostringstream cc;
 	cc << "Coins: " << game.coins_score;;
@@ -40,9 +43,9 @@ void HUD::SetWorldName()
 }
 
 
-void HUD::RenderHUD() const
+void HUD::RenderHUD(const Camera &cam) const
 {
-	if (debug) { RenderDebug(); }
+	if (debug) { RenderDebug(cam); }
 
 	int centerx = renderer.GetWidth() / 2;
 	int textw = text_worldname.GetWidth() / 2;
@@ -55,10 +58,15 @@ void HUD::RenderHUD() const
 }
 
 
-void HUD::Debug_Clear()
+void HUD::Debug_Clear() const
 {
-	debug_rects.clear();
-	debug_circles.clear();
+	//to make sure some events stay on the screen for at least a little time
+	if (debug_delay <= 0.0f)
+	{
+		debug_delay = 0.05f;
+		debug_rects.clear();
+		debug_circles.clear();
+	}
 }
 
 void HUD::Debug_Rectangle(int x, int y, int w, int h)
@@ -93,16 +101,26 @@ void RenderCircle(const sdl::Renderer &renderer, int x, int y, int radius)
 
 
 
-void HUD::RenderDebug() const
+void HUD::RenderDebug(const Camera &cam) const
 {
+	SDL_SetRenderDrawColor(renderer.GetRenderer(), 0x22, 0xee, 0xbb, 0xff);
+
+	glm::vec2 offset = cam.GetOffset();
+
 	for(auto rect : debug_rects)
 	{
+		rect.x -= offset.x;
+		rect.y -= offset.y;
+
 		SDL_RenderDrawRect(renderer.GetRenderer(), &rect);
 		//std::cout << "Rect ("<<rect.x<< ", "<<rect.y<<" : "<<rect.w<<", "<<rect.h<<")" << std::endl;
 	}
 
 	for(auto circ : debug_circles)
 	{
+		circ.x -= offset.x;
+		circ.y -= offset.y;
+
 		RenderCircle(renderer, circ.x, circ.y, circ.w);
 	}
 }

@@ -92,7 +92,7 @@ public:
 		float d1 = AngleDiff(from, to);
 		float d2 = AngleDiff(to, from);
 
-		if (id == 0) std::cout << "d1="<<d1<<"  d2="<<d2<< "  maxangle="<< maxangle <<std::endl;
+		//if (id == 0) std::cout << "d1="<<d1<<"  d2="<<d2<< "  maxangle="<< maxangle <<std::endl;
 		if (abs(d1) <= maxangle+1 or abs(d2) <= maxangle+1)
 		return to;
 
@@ -137,7 +137,7 @@ public:
 
 		if (id == 0)
 		{
-			std::cout << "Player " << id << " Rot: " << heading<< std::endl;
+			//std::cout << "Player " << id << " Rot: " << heading<< std::endl;
 		}
 
 		Entity::Update(dt);

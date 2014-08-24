@@ -75,6 +75,8 @@ public:
 	{
 		tile t = tg.Get();
 
+		if (abs(x) < 2 and abs(y) < 2) t = tile::grass;
+
 		MapTile m{t, 0};
 		return m;
 	}
@@ -99,6 +101,8 @@ public:
 	MapTile operator()(int x, int y) override
 	{
 		tile t = tg.Get();
+
+		if (abs(x) < 2 and abs(y) < 2) t = tile::dirt;
 
 		MapTile m{t, 0};
 		return m;

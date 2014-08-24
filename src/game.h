@@ -41,6 +41,8 @@ const int mapheight = windowheight/64 + 1;
 
 #include "generators.h"
 
+#include "camera.h"
+
 // Main game app class.
 
 class GameApp : public sdl::App
@@ -60,6 +62,7 @@ public:
 	World overworld { gen_over };
 	World underworld { gen_under };
 
+
 	int whichworld = 1;  //1 = overworld, 0 = underworld
 	World & GetWorld() {  return whichworld==0? underworld : overworld; }
 	const World & GetWorld() const {  return whichworld==0? underworld : overworld; }
@@ -72,7 +75,17 @@ public:
 		GetPlayer().LostFocus();
 		whichworld = whichworld==0? 1: 0;
 		hud.SetWorldName();
+		GetCamera().SetTransition( { 0.0f, (whichworld-0.5f) * 1000.0f} );
 	 }
+
+	glm::vec2 cam_size { renderer.GetWidth(), renderer.GetHeight() };
+	Camera cam_over { cam_size, overworld.GetPlayer().position };
+	Camera cam_under { cam_size, overworld.GetPlayer().position };
+
+
+	Camera & GetCamera() { return whichworld==0? cam_under : cam_over; }
+	const Camera & GetCamera() const { return whichworld==0? cam_under : cam_over; }
+
 
 	int coins_score = 0; //Player's Score
 
@@ -114,7 +127,7 @@ public:
 	{
 		const World & world = GetWorld();
 
-		world_renderer.RenderMap(world);
+		world_renderer.RenderMap(world, GetCamera());
 	}
 
 
@@ -135,24 +148,35 @@ public:
 	{
 		const World & world = GetWorld();
 
-		entity_renderer.RenderEntities(world);
+		entity_renderer.RenderEntities(world, GetCamera());
 
 		const Player& player = GetPlayer();
-		entity_renderer.RenderPlayer(player);
+		entity_renderer.RenderEntity(player, GetCamera());
 	}
 
 
 	void UpdatePlayer(float dt)
 	{
+		GetPlayer().SetLookAt(world_mouse_pos.x, world_mouse_pos.y);
+
 		overworld.GetPlayer().Update(dt);
 		underworld.GetPlayer().Update(dt);
 	}
 
+	void UpdateCamera(float dt)
+	{
+		cam_over.Follow(overworld.GetPlayer());
+		cam_under.Follow(underworld.GetPlayer());
+
+		cam_over.Update(dt);
+		cam_under.Update(dt);
+	}
 
 	//Update all particles, coins, player
 	void UpdateObjects(float dt)
 	{
 		UpdatePlayer(dt);
+		UpdateCamera(dt);
 
 		overworld.UpdateObjects(dt);
 		underworld.UpdateObjects(dt);
@@ -171,8 +195,8 @@ public:
 	// Marked as const function so you can't change any state. (Do that in Upate)
 	void Render() const override
 	{
-		//renderer.SetColour(0, 0, 0, 255);
-		//renderer.Clear();
+		renderer.SetColour(0, 0, 0x22, 255);
+		renderer.Clear();
 
 		//All these subfunctions must also be const functions.
 
@@ -180,16 +204,18 @@ public:
 
 		RenderObjects();
 
-		hud.RenderHUD();
+		hud.RenderHUD(GetCamera());
 
-		SDL_Delay(10);
+		//SDL_Delay(10);
+
+		hud.Debug_Clear();
+
 	}
 
 
 	// Gets called once per frame with the time since last frame in seconds
 	void Update(float dt)
 	{
-		hud.Debug_Clear();
 
 		UpdateObjects(dt);
 
@@ -246,10 +272,34 @@ public:
 		}
 	}
 
+	glm::vec2 mouse_pos;
+	glm::vec2 world_mouse_pos;
+
 	void OnMouseMove(int x, int y) override
 	{
-		GetPlayer().SetLookAt(x, y);
+		mouse_pos.x = x;
+		mouse_pos.y = y;
+
+		world_mouse_pos = ScreenToWorld(mouse_pos);
+
+		Debug_Circle(world_mouse_pos.x, world_mouse_pos.y, 20);
 	}
+
+
+	glm::vec2 ScreenToWorld(glm::vec2 p) const
+	{
+		glm::vec2 r = p + GetCamera().GetOffset();
+
+		return r;
+	}
+
+	glm::vec2 WorldToScreen(glm::vec2 p) const
+	{
+		glm::vec2 r = p - GetCamera().GetOffset();
+
+		return r;
+	}
+
 };
 
 

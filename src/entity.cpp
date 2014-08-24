@@ -80,16 +80,15 @@ bool Entity::HasCollision(const World &world) const
 	float miny = (position.y - (2*radius));
 	float maxy = (position.y + (2*radius));
 
-	minx = floor(minx);
-	miny = floor(miny);
-	maxx = ceil(maxx);
-	maxy = ceil(maxy);
-
-
 	minx /= 64.0f;
 	miny /= 64.0f;
 	maxx /= 64.0f;
 	maxy /= 64.0f;
+
+	minx = round(minx-0.5f);
+	miny = round(miny-0.5f);
+	maxx = round(maxx);
+	maxy = round(maxy);
 
 	Debug_Rectangle(int(minx)*64, int(miny)*64, int(maxx-minx+1)*64, int(maxy-miny+1)*64);
 
@@ -130,8 +129,8 @@ bool Entity::HasCollision(float x, float y, float width, float height) const
 	// found from
 	// http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 
-	Debug_Circle(position.x, position.y, radius);
-	Debug_Rectangle(x, y, width, height);
+	//Debug_Circle(position.x, position.y, radius);
+	Debug_Rectangle(x+1, y+1, width-1, height-1);
 
 	const float closestX = glm::clamp(position.x, x, x+width);
 	const float closestY = glm::clamp(position.y, y, y+height);

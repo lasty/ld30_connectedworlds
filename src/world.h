@@ -196,6 +196,23 @@ public:
 		// Add any new coins here.  We can't do this inside the loops above.
 		AddCoins(new_coins);
 	}
+
+
+	std::vector<const Entity*> GetEntitiesInRange(const glm::vec2 &topleft, const glm::vec2 &size) const
+	{
+		std::vector<const Entity*> list;
+
+		for(const Entity& e : entities)
+		{
+			if (e.HasCollision(topleft.x, topleft.y, size.x, size.y))
+			{
+				list.push_back(&e);
+			}
+		}
+
+		return list;
+	}
+
 };
 
 
