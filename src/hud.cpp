@@ -36,6 +36,11 @@ void HUD::SetInventory(Player &player)
 	cc << std::setw(2) << std::setfill('0');  cc<<cents;
 	text_inv_coins.SetText(cc.str());
 
+	for(auto &i : inv_slots)
+	{
+		i.SetInventorySlot(player.GetInventory());
+	}
+
 	std::ostringstream health;
 	health << "Health: " << player.GetHealthPercent() << "%";
 	text_inv_health.SetText(health.str());
@@ -74,6 +79,11 @@ void HUD::RenderHUD(const Camera &cam) const
 	text_inv_coins.Render(renderer, 5, -1);
 	text_inv_hunger.Render(renderer, 5, -16);
 	text_inv_health.Render(renderer, 5, -32);
+
+	for(auto &i : inv_slots)
+	{
+		i.Render();
+	}
 
 
 	text_particle_count.Render(renderer, -10, -1);

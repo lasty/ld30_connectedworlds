@@ -213,6 +213,16 @@ public:
 		}
 	}
 
+	bool CanPickup(std::shared_ptr<Entity> &e)
+	{
+		return inv.CanPickup(e);
+	}
+
+	void Pickup(std::shared_ptr<Entity> e)
+	{
+		inv.Move(std::move(e));
+	}
+
 	int GetAlive() const
 	{
 		return (health > 0.0f);
@@ -233,6 +243,8 @@ public:
 		return health * 100 / 100;
 	}
 
+	Inventory & GetInventory() { return inv; }
+	const Inventory & GetInventory() const { return inv; }
 };
 
 

@@ -1,6 +1,8 @@
 #ifndef GAMEDEFS_H
 #define GAMEDEFS_H
 
+#include <string>
+
 // enums for entities and tiles
 
 enum class ent
@@ -48,6 +50,7 @@ enum class colour
 
 bool CanCollide(const tile &td);
 
+std::string & GetNameForEntity(ent e);
 
 
 #endif // GAMEDEFS_H

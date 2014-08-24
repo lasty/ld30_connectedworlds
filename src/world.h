@@ -213,18 +213,18 @@ public:
 
 			if (player.HasCollision(*e))
 			{
-				e->DispatchPickup(player);
 
-				e->Kill();
-				sounds.Pickup();
-				//coins_score++;
-				//AddCoins(1);
+				if (player.CanPickup(e))
+				{
+					player.Pickup(std::move(e));
+					sounds.Pickup();
+				}
 			}
 		}
 
 
-		// lambda function to test whether we should remove this particle
-		const auto not_alive = [](std::shared_ptr<Entity> &e) { return not e->StillAlive(); };
+		// lambda function to test whether we should remove this (is the pointer empty, or is it not alive?
+		const auto not_alive = [](std::shared_ptr<Entity> &e) { return not e or not e->StillAlive(); };
 
 		// Remove any dead entities...
 		//
@@ -243,8 +243,7 @@ public:
 
 		for (auto &e : spawn_list)
 		{
-			//TODO use std::move?
-			entities.push_back(e);
+			entities.push_back(std::move(e));
 		}
 		spawn_list.clear();
 

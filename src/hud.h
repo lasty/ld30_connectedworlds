@@ -6,7 +6,10 @@
 #include "font/font.h"
 #include "font/text.h"
 
+#include "gamedefs.h"
 #include "utils.h"
+
+#include "inventory.h"
 
 #include <sstream>
 #include <vector>
@@ -14,6 +17,61 @@
 class GameApp;
 class Camera;
 class Player;
+
+class InventorySlot
+{
+public:
+	InventorySlot(sdl::Renderer &rend, Font &font, int slot_id)
+	: renderer(rend), font(font), id(slot_id)
+	, num_text(rend, font, "1")
+	, name_text(rend, font, "Empty")
+	, count_text(rend, font, "x 0")
+	{
+		std::stringstream ss;
+		ss << "[" << id+1 << "]";
+		num_text.SetText(ss.str());
+
+		yoffset = (5-id) * -40;
+		yoffset -= 40;
+		xoffset = 10;
+
+		num_text.shadow = true;
+		name_text.shadow = true;
+		count_text.shadow = true;
+
+		num_text.box = true;
+		name_text.box = true;
+		count_text.box = true;
+	}
+
+	sdl::Renderer &renderer;
+	Font &font;
+	int id;
+
+	int yoffset = 0;
+	int xoffset = 0;
+
+	Text num_text;
+	Text name_text;
+	Text count_text;
+
+	void SetInventorySlot(Inventory &inv)
+	{
+		name_text.SetText(GetNameForEntity(inv.slots[id]));
+
+		std::stringstream ss;
+		ss << "x " << inv.slots_count[id];
+		count_text.SetText(ss.str());
+	}
+
+	void Render() const
+	{
+		num_text.Render(renderer, xoffset, yoffset);
+		name_text.Render(renderer, xoffset + 40, yoffset);
+		count_text.Render(renderer, xoffset + 200, yoffset);
+	}
+
+};
 
 class HUD
 {
@@ -38,6 +96,13 @@ public:
 		text_inv_coins.shadow = 1;
 		text_inv_health.shadow = 1;
 		text_inv_hunger.shadow = 1;
+
+		inv_slots.reserve(5);
+		for (int i=0; i<5; i++)
+		{
+			inv_slots.emplace_back(renderer, font1, i);
+		}
+
 	}
 
 	~HUD() { SetHUD(nullptr); }
@@ -57,6 +122,8 @@ private:
 	Text text_inv_coins { renderer, font2, "" };
 	Text text_inv_health { renderer, font2, "" };
 	Text text_inv_hunger { renderer, font2, "" };
+
+	std::vector<InventorySlot> inv_slots;
 
 public:
 	void UpdateHUD(float dt);
