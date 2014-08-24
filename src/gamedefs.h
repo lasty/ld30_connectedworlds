@@ -45,6 +45,8 @@ enum class colour
 	blue,
 	red
 
+	, deadred
+
 
 };
 

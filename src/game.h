@@ -111,36 +111,32 @@ public:
 
 		SpawnWorldEntities();
 		InitShops();
+
+		SetPlayerText(overworld.GetPlayer());
+		SetPlayerText(underworld.GetPlayer());
 	}
+
 
 	//ground everywhere except borders are brick walls
 	void NewMap()
 	{
 		overworld.NewWorld();
 		underworld.NewWorld();
-/*
-		for (int x=0; x<mapwidth; x++)
-		{
-			for (int y=0; y<mapheight; y++)
-			{
-				//int v = rand() % 2;
-				int v = false;
-				if (y==0 or x==0 or x == (mapwidth-1) or y == (mapheight-1)) v = true;
-				SetMap(x,y, (bool)(v));
-			}
-		}
-*/
+
 		SpawnWorldEntities();
 
 		InitShops();
 		hud.SetWorldName();
 	}
 
+
 	void SpawnWorldEntities()
 	{
 		overworld.AddCoins(10);
-		underworld.AddCoins(50);
+		//overworld.AddFood(100);
+		underworld.AddCoins(100);
 	}
+
 
 	void SetShopText(ThingsWithInventory &shop)
 	{
@@ -151,6 +147,19 @@ public:
 		shop.text_below->box = true;
 		shop.text_below->shadow = true;
 	}
+
+
+	void SetPlayerText(Player &player)
+	{
+		player.big_text.reset( new Text(renderer, hud.GetFont1(), "") );
+		player.msg_text.reset( new Text(renderer, hud.GetFont2(), "") );
+
+		//player.big_text->box = true;
+		player.big_text->shadow = true;
+		player.msg_text->box = true;
+		player.msg_text->shadow = true;
+	}
+
 
 	void InitShops()
 	{
@@ -210,6 +219,8 @@ public:
 
 		const Player& player = GetPlayer();
 		entity_renderer.RenderEntity(player, GetCamera());
+
+		player.RenderText(GetCamera());
 	}
 
 

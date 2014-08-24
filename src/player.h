@@ -7,6 +7,9 @@
 
 #include "inventory.h"
 
+#include "font/text.h"
+
+#include "camera.h"
 
 #include <glm/vec2.hpp>
 #include <glm/trigonometric.hpp>
@@ -16,6 +19,9 @@
 class World;
 
 #include <iostream>
+#include <memory>
+#include <sstream>
+
 
 class Player : public Entity
 {
@@ -43,7 +49,7 @@ public:
 
 	float hunger = 0.0f;
 	float hunger_max = 100.0f;
-	float hunger_per_second = 0.1f;
+	float hunger_per_second = 0.3f;
 
 	Inventory inv;
 
@@ -59,16 +65,83 @@ public:
 	float walk_timer_legs = 0.0f;
 	float walk_timer_arms = 0.0f;
 
+
+	std::unique_ptr<Text> msg_text;
+	std::unique_ptr<Text> big_text;
+
+	float msg_timer = 0.0f;;
+	float big_timer = 0.0f;;
+
+
+	void SetMessage(std::string msg, float time = 1.0f)
+	{
+		if (msg_text)
+		{
+			msg_text->SetText(msg);
+		}
+		else
+		{
+			std::cout << msg << std::endl;
+		}
+		msg_timer = time;
+	}
+
+
+	void BigMessage(std::string msg, float time = 10.0f)
+	{
+		if (big_text)
+		{
+			big_text->SetText(msg);
+		}
+		else
+		{
+			std::cout << "** " << msg << std::endl;
+		}
+		big_timer = time;
+	}
+
+	void RenderText(const Camera &cam) const
+	{
+		if (big_text and big_timer > 0)
+		{
+			glm::vec2 pos = position - cam.GetOffset();
+			pos.x -= big_text->GetWidth() / 2;
+			pos.y -= 50;
+
+			big_text->Render(pos.x, pos.y);
+		}
+
+		if (msg_text and msg_timer > 0)
+		{
+			glm::vec2 pos = position - cam.GetOffset();
+			pos.x -= msg_text->GetWidth() / 2;
+			pos.y -= 20;
+
+
+			msg_text->Render(pos.x, pos.y);
+		}
+	}
+
 	void Reset()
 	{
-		health = 100.0f;
+		if (id == 0)
+		{
+			health = 100.0f;
+			hunger = 10.0f;
+		}
+		else
+		{
+			health = 100.0f;
+			hunger = 20.0f;
+		}
 
-		hunger = 50.0f;
 		inv.Clear();
 
 		position = { 0.0f, -40.0f };
 		velocity = { 0.0f, 0.0f };
 
+		msg_timer = 0.0f;
+		big_timer = 0.0f;
 	}
 
 	void SetMoveDirection(float x, float y)
@@ -137,12 +210,23 @@ public:
 		}
 	}
 
+	void HungerCheck(float dt);
+	void HealthCheck(float dt);
 
 	void Update(float dt) override
 	{
 		float lookangle = VecToAngle(position, look_at);
 
-		heading = InterpAngle(heading, lookangle, dt * rot_speed);
+		if (GetAlive())
+		{
+			heading = InterpAngle(heading, lookangle, dt * rot_speed);
+		}
+		else
+		{
+			BigMessage("Dead", 1.0f);
+			SetMessage("(Press TAB to switch, or N for new game)", 1.0f);
+			control_stick = {0.0f, 0.0f};
+		}
 
 		if (control_stick.x != 0 or control_stick.y != 0)
 		{
@@ -184,27 +268,35 @@ public:
 
 		Entity::Update(dt);
 
-		hunger -= hunger_per_second * dt;
-		if (hunger < 0.0f)
-		{
-			hunger = 0.0f;
-			health -= 1.0f * dt;
-		}
 
-		if (health < 0.0f)
-		{
-			Kill();
-		}
-		else if (health >= 100.0f)
-		{
-			health -= 1.0f * dt;
-		}
+		HungerCheck(dt);
+
+		HealthCheck(dt);
+
+
+
+		msg_timer -= dt;
+		big_timer -= dt;
 
 	}
 
+	void DropInv();
+
 	bool CanPickup(std::shared_ptr<Entity> &e)
 	{
-		return inv.CanPickup(e);
+		if (not GetAlive()) return false;
+		if (inv.CanPickup(e))
+		{
+			return true;
+		}
+		else
+		{
+			if (msg_timer < -0.5f)
+			{
+				SetMessage("Inventory Full.", 1.0f);
+			}
+			return false;
+		}
 	}
 
 	void Pickup(Entity &e)
@@ -218,17 +310,25 @@ public:
 		//coins += c.coin_value;
 	}
 
-	void Pickup(Food &f)
+	bool Pickup(Food &f)
 	{
-		std::cout << "Yum (food value " << f.food_value <<")" << std::endl;
+
 		//coins += c.coin_value;
 		if (hunger < hunger_max)
 		{
+			std::stringstream msg;
+			msg << "(Food Value: " << f.food_value <<")";
+
+			BigMessage("Yum!", 2.0f);
+			SetMessage(msg.str(), 2.0f);
+
 			hunger+= f.food_value;
+			return true;
 		}
 		else
 		{
-			//
+			BigMessage("I'm Full", 2.0f);
+			return false;
 		}
 	}
 

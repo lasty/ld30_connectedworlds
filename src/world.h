@@ -205,6 +205,18 @@ public:
 	}
 
 
+	void SpawnDie(std::shared_ptr<Entity> what, int x, int y)
+	{
+		SpawnEntity(what);
+
+		//XXX more hackery,  get last added item .. will probably crash if entity name is not valid
+		auto &e = spawn_list.back();
+
+		e->position = { x, y };
+		e->velocity = { random_float(-300, 300), random_float(-300, 300) };
+	}
+
+
 	void AddCoins(int numcoins=1)
 	{
 		for(int i=0; i<numcoins; i++)

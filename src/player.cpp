@@ -12,22 +12,47 @@
 
 void Player::Use()
 {
+	if(not GetAlive()) return;
+
 	auto item = inv.PopFromSlot();
 
 	if (item)
 	{
-		world->sounds.UseItem();
-		//world->SpawnEntity(item);
-		//item->Shoot(position, look_at, 100);
+		bool used = false;
+
+		Food *f = dynamic_cast<Food*>(item.get());
+		if (f)
+		{
+			used = Pickup(*f); //Eat(*f);
+			world->sounds.UseItem();
+			//used = true;
+		}
+
+		//TODO other kinds of useable objects
+
+		if (not used)
+		{
+			SetMessage("I can't use this.");
+
+			//just drop it, to save deleting it
+
+			world->SpawnEntity(item);
+			item->Shoot(position, look_at, 5);
+			world->sounds.ErrorBeep();
+		}
+
 	}
 	else
 	{
+		SetMessage("Nothing to use.");
 		world->sounds.ErrorBeep();
 	}
 }
 
 void Player::Throw()
 {
+	if(not GetAlive()) return;
+
 	auto item = inv.PopFromSlot();
 
 	const float throwspeed = 500.0f;
@@ -59,7 +84,54 @@ void Player::Throw()
 	}
 	else
 	{
+		SetMessage("Nothing to throw.");
 		world->sounds.ErrorBeep();
+	}
+}
+
+
+void Player::DropInv()
+{
+	for(auto &e : inv.items)
+	{
+		world->SpawnDie(e, position.x, position.y);
+		e.reset();
+	}
+	inv.Clear();
+}
+
+
+void Player::HungerCheck(float dt)
+{
+	hunger -= hunger_per_second * dt;
+	if (hunger < 0.0f)
+	{
+
+		if (big_timer < -0.5f)
+		{
+			BigMessage("Starving!", 1.0f);
+			world->sounds.Hit();
+		}
+
+		hunger = 0.0f;
+		health -= 5.0f * dt;
+	}
+}
+
+void Player::HealthCheck(float dt)
+{
+	if (health < 0.0f)
+	{
+		if (StillAlive())
+		{
+			world->sounds.Explosion();
+			DropInv();
+			Kill();
+		}
+	}
+	else if (health > 100.0f)
+	{
+		health -= 1.0f * dt;
 	}
 }
 
