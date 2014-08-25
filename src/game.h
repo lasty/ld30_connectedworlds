@@ -114,6 +114,15 @@ public:
 
 		SetPlayerText(overworld.GetPlayer());
 		SetPlayerText(underworld.GetPlayer());
+
+
+		/// TODO refactor
+
+		overworld.GetPlayer().BigMessage("Starving Symbiosis", 5.0f);
+		overworld.GetPlayer().SetMessage("Press TAB to Change Worlds.  You can throw/drop items on the Portal and Shops)", 10.0f);
+
+		underworld.GetPlayer().BigMessage("Starving Symbiosis", 5.0f);
+		underworld.GetPlayer().SetMessage("Press TAB to Change Worlds.  You can throw/drop items on the Portal and Shops)", 10.0f);
 	}
 
 
@@ -184,7 +193,7 @@ public:
 		SetShopText(*shop2);
 		overworld.SpawnEntity(shop2);
 
-		shop3.reset( new Shop(overworld, shopx + 2*shopspacing, shopy, "Ham", "food3", 1000) );
+		shop3.reset( new Shop(overworld, shopx + 2*shopspacing, shopy, "Roast Ham", "food3", 1000) );
 		SetShopText(*shop3);
 		overworld.SpawnEntity(shop3);
 	}
@@ -306,11 +315,13 @@ public:
 			}
 			else if (e.keysym.sym == SDLK_SPACE)
 			{
-				sounds.Pickup();
-				NewCoin(10);
-				GetWorld().AddFood(10);
+				//sounds.Pickup();
+				//NewCoin(10);
+				//GetWorld().AddFood(10);
+
+				GetPlayer().Throw();
 			}
-			else if (e.keysym.sym == SDLK_TAB)
+			else if (e.keysym.sym == SDLK_TAB or e.keysym.sym == SDLK_RETURN)
 			{
 				SwitchWorlds();
 			}

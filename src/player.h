@@ -124,6 +124,8 @@ public:
 
 	void Reset()
 	{
+		Revive();
+
 		if (id == 0)
 		{
 			health = 100.0f;

@@ -1,13 +1,58 @@
 
-#Ludum Dare 30: Connected Worlds
+# Starving Symbiosis
 
-by Lasty
+(For Ludum Dare 30: Connected Worlds)
+
+by Lasty   @tristan_lasty
+
+https://github.com/lasty/ld30_connectedworlds
+
+##TL;DR
+
+* Get Coins from UnderWorld
+* Buy Food in OverWorld
+* Use Portal to transfer
+* Press TAB to change worlds
 
 
-TODO: Intro
+# Intro
+
+You and a friend have found yourself in a predicament.
+
+You are both hungry, and need to buy food.
+
+However, one person has all the shops, and one person has all the coins.
+
+You must share items using the portal to survive.
+
+
+
+## Instructions
+
+In game help is available onscreen.
+
+* Use WSAD/Arrows to move, mouse pointer to aim.
+* Left click to eat,  Right click to throw.
+* TAB to change worlds
+* 1-5 to change your current inventory slot.
+* ESC to quit
+* N for new game.
+
+
+## Regrets
+
+Yeah, I ran out of time.
+
+I was planning to have weapons, and some sort of zombie wave / tower defence on the overworld,
+using metal ores mined in the underworld.
+
+But yeah... No time :(  There's always next Ludum Dare.
+
 
 
 ##Build Prerequisites
+
+Should Build in Windows (MSYS/Mingw), Macosx (Clang/Xcode) or Linux (Clang or GCC).
 
 ###Build Tools:
 * CMake 3.0 or above  (2.8 won't work) 
@@ -74,7 +119,5 @@ make
 ##Licence
 
 Released under BSD licence.
-
-Please feel free to use as a base for your own projects.
 
 

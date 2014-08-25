@@ -32,7 +32,7 @@ void Player::Use()
 
 		if (not used)
 		{
-			SetMessage("I can't use this.");
+			SetMessage("I can't eat this.");
 
 			//just drop it, to save deleting it
 
@@ -114,7 +114,12 @@ void Player::HungerCheck(float dt)
 		}
 
 		hunger = 0.0f;
-		health -= 5.0f * dt;
+
+		if (health > 0.0f)
+		{
+			health -= 5.0f * dt;
+		}
+
 	}
 }
 

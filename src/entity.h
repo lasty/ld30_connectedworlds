@@ -53,6 +53,7 @@ public:
 	virtual void Update(float dt);
 
 	void Kill();
+	void Revive() { alive = true; }
 	bool StillAlive() const { return alive; }
 
 	bool HasCollision(const Entity &other) const;
