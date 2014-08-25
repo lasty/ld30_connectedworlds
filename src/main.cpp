@@ -77,6 +77,7 @@ int main()
 	AddPath(".");
 	AddPath("data");
 	AddPath("../data");
+	//AddPath("../../data");
 
 	GameApp thegame;
 

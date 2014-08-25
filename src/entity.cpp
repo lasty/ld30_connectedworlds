@@ -159,7 +159,7 @@ bool Entity::HasCollision(float x, float y, float width, float height) const
 	// found from
 	// http://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
 
-	//Debug_Circle(position.x, position.y, radius);
+	Debug_Circle(position.x, position.y, radius);
 	//Debug_Rectangle(x+1, y+1, width-1, height-1);
 
 	const float closestX = glm::clamp(position.x, x, x+width);

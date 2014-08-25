@@ -27,7 +27,7 @@ class Player : public Entity
 {
 public:
 	Player(World &theworld)
-	: Entity(ent::player, 24.0f)
+	: Entity(ent::player, 18.0f)
 	{
 		world = &theworld;
 

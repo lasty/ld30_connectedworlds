@@ -9,8 +9,15 @@ list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_LIST_DIR}/libs)
 list(APPEND CMAKE_PREFIX_PATH ../libs ../libs/install)
 
+## Can't figure this out...
+#
+#SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+#set(CMAKE_INSTALL_RPATH ".")
+#SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+
+
 # Set up some defaults for variables; less typing on the command line
-set(CMAKE_INSTALL_PREFIX . CACHE PATH "Install Prefix")
+set(CMAKE_INSTALL_PREFIX "install" CACHE PATH "Install Prefix")
 set(CMAKE_BUILD_TYPE Debug CACHE STRING "(Debug|Release|RelWithDebInfo|MinSizeRel)")
 
 # This needs to be below the install prefix settings for it to work
@@ -58,6 +65,16 @@ target_link_libraries(ld30 PUBLIC cpp11)
 target_link_libraries(ld30 PRIVATE all_warnings)
 target_link_libraries(ld30 PUBLIC SDL2 OpenGL Freetype GLM)
 
+
+# Install steps
+
+install(TARGETS ld30 DESTINATION .)
+
+install(DIRECTORY data DESTINATION .)
+
+install(FILES README.md DESTINATION .)
+file(GLOB SCREENSHOTS *.jpg)
+install(FILES ${SCREENSHOTS} DESTINATION .)
 
 # Setup for windows dlls required to be installed
 if (WIN32)
