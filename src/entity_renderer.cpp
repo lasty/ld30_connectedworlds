@@ -128,7 +128,7 @@ void EntityRenderer::RenderEntity(const Player &p, const Camera &cam) const
 
 void EntityRenderer::SetupCircle()
 {
-	const int steps = 16;
+	const int steps = 128;
 	for (int i=0; i<steps; i++)
 	{
 		float rangle = (float(i) / float(steps)) * glm::radians(360.0f);
@@ -154,8 +154,8 @@ void EntityRenderer::RenderRadius(const Entity &entity, const Camera &cam) const
 		p1 = p1 * radius + worldpos;
 		p2 = p2 * radius + worldpos;
 
-		SDL_RenderDrawLine(renderer.GetRenderer(), p1.x, p1.y, p2.x, p2.y);
-		//SDL_RenderDrawPoint(renderer.GetRenderer(), x+worldpos.x, y+worldpos.y);
+		//SDL_RenderDrawLine(renderer.GetRenderer(), p1.x, p1.y, p2.x, p2.y);
+		SDL_RenderDrawPoint(renderer.GetRenderer(), p1.x, p1.y);
 	}
 }
 
@@ -181,6 +181,12 @@ const Sprite & EntityRenderer::GetSpriteForEntity(const Entity &e) const
 			return food_potatosalad;
 		case ent::food3:
 			return food_ham;
+
+		case ent::shop:
+			return shoppe;
+
+		case ent::portal:
+			return portal;
 
 		case ent::none:
 			return none_sprite;

@@ -42,6 +42,8 @@ private:
 	Sprite food_potatosalad { renderer, item_texture, { 32, 32, 32, 32}, { 16, 16} };
 	Sprite food_ham { renderer, item_texture, { 64, 32, 32, 32}, { 16, 16} };
 
+	Sprite shoppe { renderer, item_texture, { 64, 0, 32, 32}, { 16, 16} };
+	Sprite portal { renderer, item_texture, { 0, 64, 64, 64}, { 32, 32} };
 
 
 	sdl::Texture player_texture { renderer, FindFile("player.png") };

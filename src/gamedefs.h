@@ -15,7 +15,9 @@ enum class ent
 	food,
 	food1,
 	food2,
-	food3
+	food3,
+	shop,
+	portal
 };
 
 

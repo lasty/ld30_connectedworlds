@@ -244,6 +244,8 @@ public:
 	//Update all particles, coins, player
 	void UpdateObjects(float dt)
 	{
+		portal->heading += (whichworld ? 180.0f : -180.0f) * dt;
+
 		UpdatePlayer(dt);
 		UpdateCamera(dt);
 

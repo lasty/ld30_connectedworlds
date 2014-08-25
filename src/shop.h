@@ -42,7 +42,12 @@ public:
 	SharedInvArea(float x, float y)
 	: ThingsWithInventory(x,y)
 	{
-		name = "Shared Area";
+		entitydef = ent::portal;
+
+		name = "Shared Portal";
+
+
+		delta_heading=360.0f;
 	}
 
 };
@@ -59,6 +64,7 @@ public:
 	, spawn_item(spawn)
 	, price(price)
 	{
+		entitydef = ent::shop;
 		name = "Shop";
 	}
 
