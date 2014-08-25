@@ -22,7 +22,7 @@ class InventorySlot
 {
 public:
 	InventorySlot(sdl::Renderer &rend, Font &font1, Font &font2, Font &font3, int slot_id)
-	: renderer(rend), font(font), id(slot_id)
+	: renderer(rend), id(slot_id)
 	, num_text(rend, font1, "1")
 	, name_text(rend, font2, "Empty")
 	, count_text(rend, font3, "x 0")
@@ -41,7 +41,7 @@ public:
 	}
 
 	sdl::Renderer &renderer;
-	Font &font;
+	//Font &font;
 	int id;
 
 	int count = 0;
