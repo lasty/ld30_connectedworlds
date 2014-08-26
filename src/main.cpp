@@ -7,6 +7,7 @@
 
 #include <string>
 
+#include "sdl/headers.h"
 
 //#define TESTS
 
@@ -69,15 +70,29 @@ int main()
 
 #else
 
+#include <stdexcept>
 
 int main()
 {
 	seed_random();
 
 	AddPath(".");
+
 	AddPath("data");
+
+
+	//For MACOSX, gets  Resource directory inside app bundle
+	char* base_cstr = SDL_GetBasePath();
+	std::string base{base_cstr};
+	SDL_free(base_cstr);
+
+	AddPath(base+"data");
+
+
+	//For build tree (saves having to install every single time)
+	AddPath(base+"../../../data");
 	AddPath("../data");
-	//AddPath("../../data");
+
 
 	GameApp thegame;
 
