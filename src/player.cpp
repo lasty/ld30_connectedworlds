@@ -10,6 +10,25 @@
 #include <glm/gtc/random.hpp>
 
 
+void Player::Pickup(std::shared_ptr<Entity> e)
+{
+	ent def = e->entitydef;
+
+	//respawn coins on underworld .. hacky
+	if (id == 1)
+	{
+		if (def == ent::coin or def == ent::coin_silver or def == ent::coin_gold)
+		{
+			world->AddCoins(1);
+			//std::cout << "Adding coin" << std::endl;
+		}
+	}
+
+	SetMessage(GetNameForEntity(e->entitydef), 1.0f);
+	inv.Move(e);
+}
+
+
 void Player::Use()
 {
 	if(not GetAlive()) return;

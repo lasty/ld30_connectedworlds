@@ -129,12 +129,12 @@ public:
 		if (id == 0)
 		{
 			health = 100.0f;
-			hunger = 10.0f;
+			hunger = 20.0f;
 		}
 		else
 		{
 			health = 100.0f;
-			hunger = 20.0f;
+			hunger = 40.0f;
 		}
 
 		inv.Clear();
@@ -310,19 +310,21 @@ public:
 	void Pickup(Coin &c)
 	{
 		//coins += c.coin_value;
+		//BigMessage("COIN!!!", 1.0f);
 	}
 
 	bool Pickup(Food &f)
 	{
-
 		//coins += c.coin_value;
 		if (hunger < hunger_max)
 		{
 			std::stringstream msg;
-			msg << "(Food Value: " << f.food_value <<")";
+			msg << GetNameForEntity(f.entitydef) << "  (Food: " << f.food_value <<")";
 
 			BigMessage("Yum!", 2.0f);
 			SetMessage(msg.str(), 2.0f);
+
+			health += f.food_value;
 
 			hunger+= f.food_value;
 			return true;
@@ -335,10 +337,8 @@ public:
 	}
 
 
-	void Pickup(std::shared_ptr<Entity> e)
-	{
-		inv.Move(e);
-	}
+	void Pickup(std::shared_ptr<Entity> e);
+
 
 	int GetAlive() const
 	{

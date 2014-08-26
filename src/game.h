@@ -97,6 +97,7 @@ public:
 
 	int coins_score = 0; //Player's Score
 
+	//int intro_page = 0;
 
 	GameApp()
 	: App("LD 30 - Starving Symbiosis  (Connected Worlds)", windowwidth, windowheight)
@@ -115,6 +116,7 @@ public:
 		SetPlayerText(overworld.GetPlayer());
 		SetPlayerText(underworld.GetPlayer());
 
+		//hud.IntroText(intro_page);
 
 		/// TODO refactor
 
@@ -189,7 +191,7 @@ public:
 		SetShopText(*shop1);
 		overworld.SpawnEntity(shop1);
 
-		shop2.reset( new Shop(overworld, shopx + 1*shopspacing, shopy, "Potato Salad", "food2", 700) );
+		shop2.reset( new Shop(overworld, shopx + 1*shopspacing, shopy, "Potato Salad", "food2", 500) );
 		SetShopText(*shop2);
 		overworld.SpawnEntity(shop2);
 
@@ -319,7 +321,12 @@ public:
 				//NewCoin(10);
 				//GetWorld().AddFood(10);
 
-				GetPlayer().Throw();
+				//bool nomoreintro = hud.IntroText(++intro_page);
+				//if (nomoreintro)
+				{
+					GetPlayer().Throw();
+				}
+
 			}
 			else if (e.keysym.sym == SDLK_TAB or e.keysym.sym == SDLK_RETURN)
 			{
@@ -413,15 +420,21 @@ public:
 
 		if (down)
 		{
-			if (button == 1)
+			//bool nomoreintro = hud.IntroText(++intro_page);
+			//if (nomoreintro)
 			{
-				GetPlayer().Use();
+
+				if (button == 1)
+				{
+					GetPlayer().Use();
+				}
+
+				if (button == 3)
+				{
+					GetPlayer().Throw();
+				}
 			}
 
-			if (button == 3)
-			{
-				GetPlayer().Throw();
-			}
 		}
 	}
 

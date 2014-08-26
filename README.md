@@ -7,6 +7,7 @@ by Lasty   @tristan_lasty
 
 https://github.com/lasty/ld30_connectedworlds
 
+
 ##TL;DR
 
 * Get Coins from UnderWorld
@@ -24,7 +25,6 @@ You are both hungry, and need to buy food.
 However, one person has all the shops, and one person has all the coins.
 
 You must share items using the portal to survive.
-
 
 
 ## Instructions
@@ -48,6 +48,22 @@ using metal ores mined in the underworld.
 
 But yeah... No time :(  There's always next Ludum Dare.
 
+
+## Release Notes
+#### 1.1
+
+* Adjusted starting hunger values (More time to get used to the game)
+* Coins now respawn on the underworld when picked up
+* Changed text on shop/portal to make it more obvious what to do
+* Added pickup text (Shows name of the item when picked up)
+* Increased font size for Health/Hunger
+* Adjusted value of Potato Salad (was too expensive per food than the others)
+* Food gives you health (equal to its food value).  Can't believe I missed that.
+
+
+#### LD30_Submit
+
+* Initial version released to Ludum Dare competition just before the deadline.
 
 
 ##Build Prerequisites

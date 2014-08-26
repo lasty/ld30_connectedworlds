@@ -70,25 +70,70 @@ void HUD::RenderHUD(const Camera &cam) const
 {
 	if (debug) { RenderDebug(cam); }
 
-	int centerx = renderer.GetWidth() / 2;
-	int textw = text_worldname.GetWidth() / 2;
-	text_worldname.Render(renderer, centerx-textw, 10);
+/*
+	//XXX removed intro page
 
-	//inventory/health/hunger
-	text_inv_coins.Render(renderer, 5, -1);
-	text_inv_hunger.Render(renderer, 5, -16);
-	text_inv_health.Render(renderer, 5, -32);
-
-	for(auto &i : inv_slots)
+	if (intro_page >=0 and intro_page < (int)intro_text.size())
 	{
-		i.Render();
+		intro_text_text.Render(renderer, 100, 50);
+		intro_text_text2.Render(renderer, 100, 150);
 	}
 
-	text_help1.Render(renderer, -10, -24);
-	text_help2.Render(renderer, -10, -1);
+	else
+*/
 
-	text_fps.Render(renderer, -5, 5);
+	{
+
+		int centerx = renderer.GetWidth() / 2;
+		int textw = text_worldname.GetWidth() / 2;
+		text_worldname.Render(renderer, centerx-textw, 10);
+
+		//inventory/health/hunger
+		text_inv_coins.Render(renderer, 5, -1);
+		text_inv_hunger.Render(renderer, 5, -20);
+		text_inv_health.Render(renderer, 5, -45);
+
+		for(auto &i : inv_slots)
+		{
+			i.Render();
+		}
+
+		text_help1.Render(renderer, -10, -24);
+		text_help2.Render(renderer, -10, -1);
+
+		text_fps.Render(renderer, -5, 5);
+
+	}
+
+
 }
+
+
+/*
+/// XXX this just cluttered up the screen
+
+bool HUD::IntroText(int i)
+{
+	intro_page = i;
+
+	if (intro_page >=0 and intro_page < (int)intro_text.size())
+	{
+		intro_text_text.SetText(intro_text.at(intro_page));
+		std::stringstream ss;
+		ss << "Help Page " << intro_page+1 << " / " << intro_text.size() << "  (Click to continue)";
+		intro_text_text2.SetText(ss.str());
+
+		game.sounds.Beep();
+
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+*/
 
 
 void HUD::Debug_Clear() const

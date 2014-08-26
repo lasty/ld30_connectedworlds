@@ -114,7 +114,10 @@ public:
 
 		text_inv_coins.shadow = 1;
 		text_inv_health.shadow = 1;
+		text_inv_health.box = true;
+		text_inv_health.box_bottom_offset = 0;
 		text_inv_hunger.shadow = 1;
+		text_inv_hunger.box = true;
 
 		inv_slots.reserve(5);
 		for (int i=0; i<5; i++)
@@ -143,10 +146,27 @@ private:
 	Text text_fps { renderer, font2, "" };
 
 	Text text_inv_coins { renderer, font2, "" };
-	Text text_inv_health { renderer, font2, "" };
-	Text text_inv_hunger { renderer, font2, "" };
+	Text text_inv_health { renderer, font1, "" };
+	Text text_inv_hunger { renderer, font1, "" };
 
 	std::vector<InventorySlot> inv_slots;
+
+/*
+	///XXX this just clutters up the screen.. need a better intro system
+
+	std::vector<std::string> intro_text {
+		"You control two players, stranded in the Overworld and Underworld"
+		,"Press TAB to change worlds"
+		,"The Overworld Has all the Shops to buy Food"
+		,"The Underworld has all the Coins"
+		,"Pass items to each other through the portal"
+		,"You must work together to survive.  Good Luck"
+	};
+
+	Text intro_text_text { renderer, bold_font, "intro_text" };
+	Text intro_text_text2 { renderer, tiny_font, "page" };
+*/
+
 
 public:
 	void UpdateHUD(float dt);
@@ -165,6 +185,11 @@ public:
 
 	void Debug_Rectangle(int x, int y, int w, int h);
 	void Debug_Circle(int x, int y, int radius);
+
+
+	//int intro_page = -1;
+	//bool IntroText(int i);
+
 
 	Font & GetFont_small() { return tiny_font; }
 	Font & GetFont_medium() { return font2; }

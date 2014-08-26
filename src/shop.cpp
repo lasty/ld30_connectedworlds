@@ -53,12 +53,19 @@ void ThingsWithInventory::Update(float dt)
 		std::stringstream ss;
 		if (inventory)
 		{
-			ss << inventory->GetSize() << " Items";
-
-			int money = inventory->CountCoins();
-			if(money)
+			if (inventory->GetSize() == 0)
 			{
-				ss << " - " << FormatMoney(money);
+				ss << "(Drop Items here)";
+			}
+			else
+			{
+				ss << inventory->GetSize() << " Items";
+
+				int money = inventory->CountCoins();
+				if(money)
+				{
+					ss << ":  " << FormatMoney(money);
+				}
 			}
 		}
 		else
@@ -109,7 +116,14 @@ void Shop::Update(float dt)
 		std::stringstream ss;
 		if (inventory)
 		{
-			ss << FormatMoney(money);
+			if (money == 0)
+			{
+				ss << "(Drop coins here)";
+			}
+			else
+			{
+				ss << FormatMoney(money);
+			}
 		}
 		else
 		{
