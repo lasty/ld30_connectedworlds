@@ -54,6 +54,8 @@ But yeah... No time :(  There's always next Ludum Dare.
 ####Windows 64bit
 (I used Windows 8.1, should work on Vista/7 too)
 
+Unzip, and then Run "ld30.exe".
+
 If Windows 8 is giving you a "Windows Protected Your PC" message,
 click "More info" then "Run Anyway".
 
@@ -61,12 +63,16 @@ click "More info" then "Run Anyway".
 ####MacOSX 64bit Mavericks
 (Probably wont run on earlier versions.  The upgrade to Mavericks is free now, so..)
 
+Unzip, then run "ld30.app"
+
 If MacOSX gives you an "Untrusted Developer" warning, Control-RightClick the app, and
 choose Open, then click Open.
 
 
 ####Linux 64bit
 (I am using Ubuntu 14.04)
+
+Untar, then run "ld30"
 
 If it complains about missing libraries, just run this, it will install
 all the required libraries.  (This is for Ubuntu 14.04)
