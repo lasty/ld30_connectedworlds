@@ -92,6 +92,7 @@ int main()
 	//For build tree (saves having to install every single time)
 	AddPath(base+"../../../data");
 	AddPath("../data");
+	AddPath("../../data");
 
 
 	GameApp thegame;

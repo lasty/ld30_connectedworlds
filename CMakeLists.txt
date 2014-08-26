@@ -18,7 +18,7 @@ SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 if(APPLE)
 	set(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks")
 else()
-	set(CMAKE_INSTALL_RPATH "@origin")  #TODO untested on linux 
+	set(CMAKE_INSTALL_RPATH "$ORIGIN/libs")
 endif()
 
 
@@ -80,6 +80,7 @@ else()
 	set(DATA_PATH .)
 endif()
 
+
 install(TARGETS ld30 DESTINATION .)
 
 install(DIRECTORY data DESTINATION ${DATA_PATH})
@@ -99,14 +100,27 @@ if (WIN32)
 endif(WIN32)
 
 
+# For MaxOSX... Copy frameworks to App Bundle
 if (APPLE)
-	# im sure there has to be a better way...
-
 	install(DIRECTORY ${SDL2_LIBRARY} DESTINATION ${FRAMEWORK_PATH})
 	install(DIRECTORY ${SDL2_IMAGE_LIBRARY} DESTINATION ${FRAMEWORK_PATH})
 	install(DIRECTORY ${SDL2_MIXER_LIBRARY} DESTINATION ${FRAMEWORK_PATH})
-
 endif(APPLE)
 
+
+# For Linux...  find and copy the SDL2, SDL2_image and SDL2_mixer libs 
+# But not SDL's dependancies...  SDL2 has too many other dependancies..
+if(UNIX)
+	set(SO_PATH libs)
+
+	get_filename_component(SDL_LOC ${SDL2_LIBRARY} DIRECTORY)
+	file(GLOB SDL_SO ${SDL_LOC}/libSDL2.so ${SDL_LOC}/libSDL2-*so*)
+	file(GLOB SDL_IMAGE_SO ${SDL_LOC}/libSDL2_image.so ${SDL_LOC}/libSDL2_image-*so*)
+	file(GLOB SDL_MIXER_SO ${SDL_LOC}/libSDL2_mixer.so ${SDL_LOC}/libSDL2_mixer-*so*)
+
+	install(FILES ${SDL_SO} DESTINATION ${SO_PATH})
+	install(FILES ${SDL_IMAGE_SO} DESTINATION ${SO_PATH})
+	install(FILES ${SDL_MIXER_SO} DESTINATION ${SO_PATH})
+endif()
 
 
