@@ -123,7 +123,7 @@ class Inventory
 			DecSlot(*ent);
 		}
 
-		return std::move(ent);
+		return ent;
 	}
 
 	std::shared_ptr<Entity> PopFromSlot()
@@ -150,11 +150,11 @@ class Inventory
 			}
 		}
 
-		return std::move(ent);
+		return ent;
 	}
 
 
-	bool CanPickup(std::shared_ptr<Entity> &e) const
+	bool CanPickup(const std::shared_ptr<Entity> &e) const
 	{
 		return HasEmptySlot() or HasSlotFor(*e);
 	}

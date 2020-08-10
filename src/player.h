@@ -54,8 +54,8 @@ public:
 	Inventory inv;
 
 
-	glm::vec2 control_stick;
-	glm::vec2 look_at;
+	glm::vec2 control_stick {0.0f, 0.0f};
+	glm::vec2 look_at {0.0f, 0.0f};
 	float current_speed = 0.0f;
 	float thrust_speed = 1600.0f;
 	float max_speed = 400.0f;
@@ -284,7 +284,7 @@ public:
 
 	void DropInv();
 
-	bool CanPickup(std::shared_ptr<Entity> &e)
+	bool CanPickup(const std::shared_ptr<Entity> &e) override
 	{
 		if (not GetAlive()) return false;
 		if (inv.CanPickup(e))
@@ -301,19 +301,19 @@ public:
 		}
 	}
 
-	void Pickup(Entity &e)
+	void PickupActual(Entity &e)
 	{
 		//Double Dispatch pattern
 		e.DispatchPickup(*this);
 	}
 
-	void Pickup(Coin &c)
+	void PickupActual(Coin &c)
 	{
 		//coins += c.coin_value;
 		//BigMessage("COIN!!!", 1.0f);
 	}
 
-	bool Pickup(Food &f)
+	bool PickupActual(Food &f)
 	{
 		//coins += c.coin_value;
 		if (hunger < hunger_max)
@@ -337,7 +337,7 @@ public:
 	}
 
 
-	void Pickup(std::shared_ptr<Entity> e);
+	void Pickup(std::shared_ptr<Entity> &e) override;
 
 
 	int GetAlive() const

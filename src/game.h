@@ -255,7 +255,8 @@ public:
 	//Update all particles, coins, player
 	void UpdateObjects(float dt)
 	{
-		portal->heading += (whichworld ? 180.0f : -180.0f) * dt;
+		if (portal)
+			portal->heading += (whichworld ? 180.0f : -180.0f) * dt;
 
 		UpdatePlayer(dt);
 		UpdateCamera(dt);
@@ -296,7 +297,7 @@ public:
 
 
 	// Gets called once per frame with the time since last frame in seconds
-	void Update(float dt)
+	void Update(float dt) override
 	{
 		world_mouse_pos = ScreenToWorld(mouse_pos);
 

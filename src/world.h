@@ -56,14 +56,10 @@ public:
 		//ExpandTerrain(0, 0, 5, 5, gen);
 		world_name = gen.GetName();
 
-		// XXX argh moved it to game
-		//gen.SpawnEntities(this);
-		//AddCoins(50);
-		//AddFood(50);
 
 		player.Reset();
 
-		std::cout << "New world '" << world_name << "' mapsize is " << terrain.size() << std::endl;
+		// std::cout << "New world '" << world_name << "' mapsize is " << terrain.size() << std::endl;
 	}
 
 
@@ -113,7 +109,7 @@ public:
 		}
 		else
 		{
-			return blank_tile;
+				return blank_tile;
 		}
 	}
 
@@ -154,6 +150,8 @@ public:
 
 	void SpawnEntity(std::shared_ptr<Entity> e)
 	{
+		assert(e);
+
 		if(e) e->world = this;
 
 		spawn_list.push_back(std::move(e));
@@ -258,7 +256,8 @@ public:
 				{
 					e->world = nullptr;
 
-					player.Pickup(std::move(e));
+					player.Pickup(e);
+					e.reset();	
 					sounds.Pickup();
 				}
 
@@ -354,7 +353,7 @@ public:
 	}
 
 
-	EntityListConst GetEntitiesInRange(const glm::vec2 &topleft, const glm::vec2 &size) const
+	const EntityListConst GetEntitiesInRange(const glm::vec2 &topleft, const glm::vec2 &size) const
 	{
 		EntityListConst list;
 

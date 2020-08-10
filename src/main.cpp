@@ -74,7 +74,7 @@ int main()
 
 int main()
 {
-	seed_random();
+	seed_random_time();
 
 	AddPath(".");
 

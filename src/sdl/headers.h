@@ -4,6 +4,10 @@
 
 // Include the SDL headers
 
+#ifdef __INTELLISENSE__
+#define USE_SDL2_IMAGE
+#define USE_SDL2_MIXER
+#endif
 
 #include <SDL.h>
 

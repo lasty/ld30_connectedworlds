@@ -10,7 +10,7 @@ target_include_directories(GLM SYSTEM INTERFACE ${GLM_INCLUDE_DIR})
 
 #Silence the warning that we know all angles are in radians
 #(Might not be necessary in later versions)
-target_compile_definitions(GLM INTERFACE GLM_FORCE_RADIANS)
+target_compile_definitions(GLM INTERFACE GLM_FORCE_RADIANS GLM_FORCE_PURE)
 
 unset(GLM_VERSION_STRING)
 

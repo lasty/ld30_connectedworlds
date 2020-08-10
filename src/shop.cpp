@@ -91,7 +91,7 @@ void ThingsWithInventory::Update(float dt)
 
 
 
-bool Shop::CanPickup(std::shared_ptr<Entity> &e)
+bool Shop::CanPickup(const std::shared_ptr<Entity> &e)
 {
 	Coin *c = dynamic_cast<Coin*>(e.get());
 	return c;

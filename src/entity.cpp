@@ -192,7 +192,7 @@ void Entity::Shoot(glm::vec2 from, glm::vec2 to, float speed)
 }
 
 
-bool Entity::CanPickup(std::shared_ptr<Entity> &e)
+bool Entity::CanPickup(const std::shared_ptr<Entity> &e)
 {
 	if (inventory)
 	{

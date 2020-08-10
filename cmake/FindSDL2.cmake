@@ -139,8 +139,8 @@ function(SDL2_IMAGE_INSTALL DEST)
 
 		# Uncomment these if you need png, jpeg, tiff or webp support
 		list(APPEND dllnames libpng16-16.dll zlib1.dll)
-		#list(APPEND dllnames libjpeg-9.dll)
-		#list(APPEND dllnames libtiff-5.dll)
+		list(APPEND dllnames libjpeg-8.dll)
+		list(APPEND dllnames libtiff-5.dll)
 		#list(APPEND dllnames libwebp-4.dll)
 
 		foreach(dll ${dllnames})

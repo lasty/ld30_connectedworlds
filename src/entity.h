@@ -17,14 +17,15 @@ class Entity
 public:
 	Entity() { }
 	Entity(const ent &entitydef, float radius) : entitydef(entitydef), radius(radius) { }
+	virtual ~Entity() = default;
 
 	ent entitydef = ent::none;
 	int data = 0;
 	World *world = nullptr;
 
 public:
-	glm::vec2 position;
-	glm::vec2 velocity;
+	glm::vec2 position {};
+	glm::vec2 velocity {};
 
 	float heading = 0.0f;
 	float delta_heading = 0.0f;
@@ -70,7 +71,7 @@ public:
 	void SetCooldown(float c = 0.5f) { cooldown = c; }
 	bool CanBePickedUp() const { return (not HasInventory()) and cooldown <= 0.0f ; }
 
-	virtual bool CanPickup(std::shared_ptr<Entity> &e);
+	virtual bool CanPickup(const std::shared_ptr<Entity> &e);
 	virtual void Pickup(std::shared_ptr<Entity> &e);
 
 	void Shoot(glm::vec2 from, glm::vec2 to, float speed);

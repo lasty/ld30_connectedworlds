@@ -10,7 +10,7 @@
 #include <glm/gtc/random.hpp>
 
 
-void Player::Pickup(std::shared_ptr<Entity> e)
+void Player::Pickup(std::shared_ptr<Entity> &e)
 {
 	ent def = e->entitydef;
 
@@ -42,7 +42,7 @@ void Player::Use()
 		Food *f = dynamic_cast<Food*>(item.get());
 		if (f)
 		{
-			used = Pickup(*f); //Eat(*f);
+			used = PickupActual(*f); //Eat(*f);
 			world->sounds.UseItem();
 			//used = true;
 		}

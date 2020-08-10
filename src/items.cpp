@@ -4,8 +4,8 @@
 #include "player.h"
 
 
-void Coin::DispatchPickup(Player &player) { player.Pickup(*this); }
+void Coin::DispatchPickup(Player &player) { player.PickupActual(*this); }
 
-void Food::DispatchPickup(Player &player) { player.Pickup(*this); }
+void Food::DispatchPickup(Player &player) { player.PickupActual(*this); }
 
 

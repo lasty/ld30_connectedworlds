@@ -7,16 +7,15 @@
 #include <sstream>
 #include <fstream>
 #include <iomanip>
+#include <stdlib.h>
 
-#include <glm/gtx/random.hpp>
+#include <glm/gtc/random.hpp>
 
 #include "hud.h"
 
-namespace {
 
 std::vector<std::string> the_path_list;
 
-};
 
 std::vector<std::string> & GetPathList()
 {
@@ -52,8 +51,8 @@ std::string FindFile(const std::string &filename)
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <stdlib.h>
-void seed_random() { srand(time(nullptr)); }
+void seed_random(unsigned int seed) { srand(seed); }
+void seed_random_time() { seed_random(time(nullptr)); }
 
 float random_float(float min, float max){ return glm::linearRand(min, max); }
 float random_int(int min, int max) { return (glm::linearRand<float>(min, max+1)); }
@@ -123,7 +122,7 @@ std::vector<glm::ivec4> colourmap =
 
 const glm::ivec4 & GetColour(colour col)
 {
-	return colourmap.at((int)col);
+	return colourmap.at((size_t)col);
 }
 
 void SetTintColour(sdl::Texture &texture, colour tint)

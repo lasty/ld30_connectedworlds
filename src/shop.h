@@ -75,7 +75,7 @@ public:
 
 	int price = 99;
 
-	bool CanPickup(std::shared_ptr<Entity> &e) override;
+	bool CanPickup(const std::shared_ptr<Entity> &e) override;
 
 	void Update(float dt) override;
 

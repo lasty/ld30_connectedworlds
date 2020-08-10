@@ -19,7 +19,8 @@ std::string FindFile(const std::string &filename);
 
 // Some quick random number helpers.  Could be improved (eg, seeding and not using % )
 
-void seed_random();
+void seed_random(unsigned int seed);
+void seed_random_time();
 
 
 float random_float(float min, float max);
